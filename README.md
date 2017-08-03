@@ -9,6 +9,6 @@ Visualizations can be used with any SoundCloud track by simply adding a url para
 https://ugotsta.github.io/viz/p5-ambience.html?url=https://soundcloud.com/ugotsta/in-the-forest  
 
 All current templates also provide an additional text parameter:  
-https://ugotsta.github.io/viz/p5-ambience.html?url=https://soundcloud.com/ugotsta/in-the-forest&text=Example  
+https://ugotsta.github.io/viz/p5-basic.html?url=https://soundcloud.com/ugotsta/depths&text=Example  
 
 Source code at GitHub: https://github.com/Ugotsta/viz
