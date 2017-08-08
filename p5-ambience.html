@@ -11,8 +11,6 @@
             var p5sc_instance;
             var sound;
             var client_id = 'ea6d4c6a6f367767516c9221a30c2ced';
-            var counter = 0;
-            var counter_limit = 200;
             var fade_alpha = 255;
 
             function getURLParameter(name) {
@@ -83,21 +81,11 @@
                     /* TRACK DETAILS */
                     s.drawDetails();
                     
-                    counter += 1;
-                    
-                    // Start fade-in near counter limit.
-                    if (counter > counter_limit - 85) {
-                        fade_alpha -= 3;
-                    }
-                    if (counter == counter_limit) {
-                        song.play();
-                    }
-                    if (counter >= counter_limit) {
-                        freq = fft.analyze();
+                    song.play();
+                    freq = fft.analyze();
 
-                        /* SPECTRUM */
-                        s.drawSpectrum();
-                    }
+                    /* SPECTRUM */
+                    s.drawSpectrum();
                     
                     // Handle fade-in effect
                     s.fill(0, 0, 86, fade_alpha);
