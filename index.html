@@ -1,45 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="gd-viz" class="gd-viz gd-fullscreen">
+
 <head>
-    <meta charset="UTF-8">
-    <title>~ DJi ~</title>
-    <link rel="shortcut icon" href="favicon.ico">
-    <meta name="viewport" content="width=device-width,user-scalable=no">
-    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-    <header>
-        <img src="https://raw.githubusercontent.com/jieverson/jieverson.github.io/master/image/eu.png"></img>
-    </header>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/markdown-it/7.0.0/markdown-it.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
     
-    <main>
-        <canvas></canvas>
+    <script src="//ugotsta.github.io/gitdown/js/sanitizer.js"></script>
+    <script src="//ugotsta.github.io/gitdown/js/gitdown.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="//ugotsta.github.io/gitdown/css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 
-        <p id="author" hidden><i class="fa fa-soundcloud"></i> Music: <a target="_blank"></a></p>
+    <title>Viz</title>
+</head>
 
-        <div>
-            <button type="button" onclick="nextSound()">
-                <i class="fa fa-soundcloud"></i> Next Sound
-            </button>
+<body id="custom">
+    <div id="wrapper">
+    </div>
 
-            <button type="button" onclick="upload()">
-                <i class="fa fa-cloud-upload"></i> Upload
-            </button>
-
-            <input type="file" onchange="file_uploaded(this)"/>
-        </div>
-
-        <input type="range" value="20000" min="0" max="20000" oninput="changeFrequency(this)" />
-    </main>
-
-    <footer>
-        Made with <i class="fa fa-heart"></i> by Jiéverson Maissiat
-    </footer>
-
-    <a href="https://github.com/jieverson/DJi"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
-
-    <script src="https://use.fontawesome.com/de272cae62.js"></script>
-    <script src="index.js"></script>
+    <script src="js/script.js"></script>
 </body>
+
 </html>

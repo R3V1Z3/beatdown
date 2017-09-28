@@ -1,14 +1,18 @@
-Various SoundCloud-based music visualizations implemented in JavaScript.
+# Viz
+A music visualizer in HTML themed using CSS.
 
-- [p5-basic.html](p5-basic.html) - Basic template inspired by Monstercat visualizations.
-- [p5-ambience.html](p5-ambience.html) - Blue tones and dark theme for [Ambience](http://ambience.ugotsta.com/) collection.
-- [p5-daskitz.html](p5-daskitz.html) - Cartoonish theme for [Daskitz](http://daskitz.ugotsta.com/) project.
-- [p5-hid.hml](p5-hid.hml) - Dark and eerie template for [Hidden in Darkness](http://hid.ugotsta.com/).
+## What?
+Wait, why would anyone build a music visualizer using the HTML DOM? HTML and CSS offer impressive visual power these days and while not as fast as native or as HTML5 canvas, CSS facilitates customization by means that designers already know.
 
-Visualizations can be used with any SoundCloud track by simply adding a url parameter:  
-https://ugotsta.github.io/viz/p5-ambience.html?url=https://soundcloud.com/ugotsta/in-the-forest  
+# Examples <!-- {$gd_info} -->
+<!-- {$gd_help_ribbon} -->
+### Don't just listen, see it.  
 
-All current templates also provide an additional text parameter:  
-https://ugotsta.github.io/viz/p5-basic.html?url=https://soundcloud.com/ugotsta/depths&text=Example  
+Tracks <!-- {$gd_tracks} -->
+- Never Again
+- Nothing
 
-Source code at GitHub: https://github.com/Ugotsta/viz
+Themes <!-- {$gd_css} -->
+
+<!-- {$gd_toc="Table of Contents"} -->
+<!-- {$gd_hide} -->
