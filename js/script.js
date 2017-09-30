@@ -88,7 +88,7 @@ jQuery(document).ready(function() {
                 audio.play();
             }
         }
-        http.open("GET", 'http://api.soundcloud.com/tracks?limit=100&genres=rock&client_id=ea6d4c6a6f367767516c9221a30c2ced', true);
+        http.open("GET", '//api.soundcloud.com/tracks?limit=100&genres=rock&client_id=ea6d4c6a6f367767516c9221a30c2ced', true);
         http.send();
     }
 
