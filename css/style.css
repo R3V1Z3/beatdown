@@ -14,6 +14,10 @@
 
 @page { size:8.5in 11in; margin: 0.25cm }
 
+html, body, #wrapper, .container {
+  overflow: hidden;
+}
+
 * {
   transition: none;
   margin: 0;
@@ -74,9 +78,9 @@ html, body, #wrapper, .container {
   width: 50%;
   height: 30%;
   overflow: hidden;
-  background: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0.1) 45%,rgba(255,255,255,0) 78%,rgba(255,255,255,0) 100%);
   border: none;
-  box-shadow: none;
+  box-shadow: inset 0 4px rgba(0,0,0,0.75);
   mix-blend-mode: overlay;
 }
 
@@ -91,7 +95,7 @@ html, body, #wrapper, .container {
 .content a {
   text-decoration: none;
   color: black;
-  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+  text-shadow: 0 0 3px rgba(255,255,255,0.75);
   filter: invert(100%);
 }
 
@@ -144,8 +148,8 @@ html, body, #wrapper, .container {
 /* ANIMATIONS */
 
 @keyframes in {
-  0% { top: 0%; right: 100%; opacity: 0; }
-  100% { right: 0%; top: 0%; opacity: 1; }
+  0% { right: 100%; opacity: 0; }
+  100% { right: 0%; opacity: 1; }
 }
 
 @keyframes out {
@@ -154,8 +158,8 @@ html, body, #wrapper, .container {
 }
 
 @keyframes in-reverse {
-  100% { top: 0%; right: 100%; opacity: 0; }
-  0% { right: 0%; top: 0%; opacity: 1; }
+  100% { right: 100%; opacity: 0; }
+  0% { right: 0%; opacity: 1; }
 }
 
 @keyframes out-reverse {

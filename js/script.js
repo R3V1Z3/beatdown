@@ -1,4 +1,4 @@
-var bands = 16;
+var bands = 32;
 var spacing = 10;
 
 var query = 'ugotsta';
@@ -22,7 +22,7 @@ jQuery(document).ready(function() {
     var toggle_html='<span class="toggle"></span>';
 
     // attach the plugin to an element
-    $('#wrapper').gitdown( {    'title': 'Viz',
+    $('#wrapper').gitdown( {    'title': 'DownBeat',
                                 'content': 'README.md',
                                 'callback': main
     } );
@@ -101,7 +101,7 @@ jQuery(document).ready(function() {
         }
         var url = '//api.soundcloud.com/tracks/?';
         //url += 'q=' + query + '&';
-        url += 'ids=' + '225718449' + '&';
+        url += 'ids=' + '223041674,225718449' + '&';
         url += 'client_id=' + client_id;
         http.open("GET", url, true);
         http.send();

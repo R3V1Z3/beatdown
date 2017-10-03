@@ -1,12 +1,12 @@
-# Viz
+# DownBeat
 A music visualizer in HTML themed using CSS.
 
 ## What?
 Wait, why would anyone build a music visualizer with HTML? HTML and CSS offer impressive visual power these days and while not as fast as native code, CSS facilitates customization by means that designers already know.
 
-# Examples <!-- {$gd_info} -->
+# Tracks <!-- {$gd_info} -->
 <!-- {$gd_help_ribbon} -->
-### Hear it, See it
+#### See the Beat
 
 Tracks <!-- {$gd_select_music_ids} -->
 - [Amen](https://soundcloud.com/ugotsta/son-of-no-man-amen)
@@ -16,5 +16,7 @@ Tracks <!-- {$gd_select_music_ids} -->
 
 Themes <!-- {$gd_css} -->
 
-<!-- {$gd_toc="Table of Contents"} -->
+Layouts <!-- {$gd_gist} -->
+
+<!-- {$gd_toc="Content"} -->
 <!-- {$gd_hide} -->
