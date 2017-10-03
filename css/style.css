@@ -23,7 +23,7 @@
 }
 
 .eq {
-  position: absolute;
+  position: fixed;
   pointer-events: none;
   margin: auto;
   height: 100%;
@@ -58,7 +58,6 @@ html, body, #wrapper, .container {
 }
 
 /* Sections */
-
 .section {
   position: absolute;
   max-width: 960px;
@@ -84,21 +83,21 @@ html, body, #wrapper, .container {
 .section .content {
   display: block;
   position: relative;
-  color: white;
-  text-shadow: 5px 5px 20px black;
+  text-shadow: 0 0 3px rgba(0,0,0,0.5);
   opacity: 1;
   padding-top: 6px;
 }
 
-.section a {
-  color: white;
+.content a {
   text-decoration: none;
+  color: black;
+  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+  filter: invert(100%);
 }
 
 .section a.handle {
   pointer-events: none;
-  color: white;
-  text-shadow: 5px 5px 20px black;
+  text-shadow: 0 0 3px rgba(0,0,0,0.5);
 }
 
 .section a:hover {
@@ -124,50 +123,44 @@ html, body, #wrapper, .container {
 .section.old,
 .section.old.lo {
   opacity: 0;
-  animation: fadeout 0.5s ease-in-out;
+  animation: out 0.5s ease-in-out;
 }
 
 .section.old.hi {
-  animation: fadein 0.5s ease;
-  animation-direction: reverse;
+  animation: in-reverse 0.5s ease;
 }
 
 .section.current,
 .section.current.hi {
   opacity: 1;
   z-index: 1;
-  animation: fadein 0.5s ease;
+  animation: in 0.5s ease;
 }
 
 .section.current.lo {
-  animation: fadeout 0.5s ease-in-out;
-  animation-direction: reverse;
+  animation: out-reverse 0.5s ease-in-out;
 }
 
 /* ANIMATIONS */
 
-@keyframes fadein {
-    0% {
-        top: 0%;
-        right: 100%;
-        opacity: 0;
-    }
-    100% {
-        right: 0%;
-        top: 0%;
-        opacity: 1;
-    }
+@keyframes in {
+  0% { top: 0%; right: 100%; opacity: 0; }
+  100% { right: 0%; top: 0%; opacity: 1; }
 }
 
-@keyframes fadeout {
-    0% {
-        left: 0%;
-        opacity: 1;
-    }
-    100% {
-        left: 100%;
-        opacity: 0;
-    }
+@keyframes out {
+  0% { left: 0%; opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+@keyframes in-reverse {
+  100% { top: 0%; right: 100%; opacity: 0; }
+  0% { right: 0%; top: 0%; opacity: 1; }
+}
+
+@keyframes out-reverse {
+  100% { left: 0%; opacity: 1; }
+  0% { left: 100%; opacity: 0; }
 }
 
 /* ------------------------------------------------------------------------ */
