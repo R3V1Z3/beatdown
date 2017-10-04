@@ -92,10 +92,10 @@ html, body, #wrapper, .container {
   padding-top: 6px;
 }
 
-.content a {
-  text-decoration: none;
+.gd-default .content a {
   color: black;
   text-shadow: 0 0 3px rgba(255,255,255,0.75);
+  text-decoration: none;
   filter: invert(100%);
 }
 
