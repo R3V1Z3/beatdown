@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
     }
 
     function get_track_info(url) {        
-        let resolveUrl = `http://api.soundcloud.com/resolve.json?url=${url}/tracks&client_id=${client_id}`
+        let resolveUrl = `//api.soundcloud.com/resolve.json?url=${url}/tracks&client_id=${client_id}`
         fetch(resolveUrl, {
             method: 'get'
         }).then((response) => {
