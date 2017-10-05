@@ -1,24 +1,19 @@
-var bands = 32;
+var params = (new URL(location)).searchParams;
+var bands;
 
-var client_id = 'ea6d4c6a6f367767516c9221a30c2ced';
-
-// webaudio configuration
-let context = new AudioContext();
-let analyser = context.createAnalyser();
-analyser.fftSize = bands * 2;
-
-let audio = new Audio();
-audio.loop = true;
-audio.crossOrigin = 'anonymous';
-
-let source = context.createMediaElementSource(audio);
-source.connect(analyser);
-analyser.connect(context.destination);
-
+var client_id = 'ea6d4c6a6f367767516c9221a30c2ced'; // soundcloud client_id
+var analyzer, audio; // for configure_webaudio
 var $gd;
-let params = (new URL(location)).searchParams;
 
 jQuery(document).ready(function() {
+
+    // credits: https://stackoverflow.com/questions/22562113/read-html-comments-with-js-or-jquery#22562475
+    $.fn.getComments = function () {
+        return this.contents().map(function () {
+            if (this.nodeType === 8) return this.nodeValue;
+        }).get();
+    };
+
     
     var toggle_html='<span class="toggle"></span>';
 
@@ -31,14 +26,38 @@ jQuery(document).ready(function() {
 
     function main() {
 
+        // TODO: maybe add $gd method to get param or use default
+        // $gd.params_get('bands',32)
+        
+        if ( params.has('bands') ) {
+            bands = params.get('bands');
+        } else bands = 16;
+        if ( bands < 16 ) bands = 16;
+
+        configure_webaudio(bands);
+
         // create eq container
         var $eq = create_eq(bands);
-        var width = $eq.width();
-        var height = $eq.height();
 
-        register_events();        
+        render_variables( '.inner .section *' );
+        register_events();
         initialize_url();
         loop();
+    }
+
+    function configure_webaudio(bands) {
+        // webaudio configuration
+        let context = new AudioContext();
+        analyser = context.createAnalyser();
+        analyser.fftSize = bands * 2;
+
+        audio = new Audio();
+        audio.loop = true;
+        audio.crossOrigin = 'anonymous';
+
+        let source = context.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(context.destination);
     }
 
     function create_eq(bands) {
@@ -85,14 +104,14 @@ jQuery(document).ready(function() {
         var isnum = /^\d+$/.test(tracks);
         if ( isnum ) {    
             url += `&ids=${tracks}&`;
-            nextSound(url);
+            play(url);
         } else if ( tracks.indexOf('soundcloud.com') > -1 ) {
             // soundcloud url specified so resolve it first
             sc_resolve( tracks, url );
         } else {
             // handle request as a query
             url += `&q=${tracks}`;
-            nextSound(url);
+            play(url);
         }
     }
 
@@ -100,15 +119,13 @@ jQuery(document).ready(function() {
         var resolve_url = `//api.soundcloud.com/resolve.json?url=${t}&client_id=${client_id}`;
         $.get(resolve_url,
             function (result) {
-                console.log(result);
                 url += `&ids=${result.id}&`;
-                console.log(url);
-                nextSound(url);
+                play(url);
             }
         );
     }
 
-    function nextSound(url){
+    function play(url){
 
         let http = new XMLHttpRequest();
         http.onload = () => { 
@@ -116,17 +133,7 @@ jQuery(document).ready(function() {
                 let result = JSON.parse(http.responseText);
                 let music = result[parseInt(Math.random() * result.length)];
                 
-                var author = '<span id="author">';
-                author += '<a href="#author"></a>';
-                author += '</span>';
-                $('.section.header .content').append(author);
-                document.querySelector('#author').hidden = false;
-                let link = document.querySelector('#author a');
-                link.text = music["title"];
-                link.href = music["permalink_url"];
-                
-                // $gd_music variables will let user render them in markdown comments
-                // <!-- $gd_music_download_url -->
+                update_details(music);
 
                 audio.src = music.stream_url + '?client_id=' + client_id;
                 audio.play();
@@ -134,6 +141,33 @@ jQuery(document).ready(function() {
         }
         http.open("GET", url, true);
         http.send();
+    }
+
+    function update_details(trackinfo){
+        console.log(trackinfo);
+
+        // first update .track-url in .info panel
+        var $tracks_url = $('.info .tracks-url');
+        if ( $tracks_url.length > 0 ) {
+            $tracks_url.text( trackinfo["title"] + ' ▾' );
+        }
+
+        // now lets update all occurrences of $gd_track variables in content
+        var $items = $('[id^="gd-track-"]');
+        if ( $items.length < 1 ) return;
+        
+        var h = '';
+        $items.each(function(i, val){
+            var i = $(this).attr('id').split('gd-track-')[1];
+            if ( i === 'title' ) {
+                h = `<a href="${trackinfo["permalink_url"]}">${trackinfo["title"]}</a>`;
+            } else if ( i === 'artwork_url' ) {
+                h = `<img src="${trackinfo["artwork_url"]}"></img>`;
+            } else {
+                h = trackinfo[i];
+            }
+            $(this).append(h);
+        });
     }
 
     function loop(){
@@ -144,7 +178,7 @@ jQuery(document).ready(function() {
         let data = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteTimeDomainData(data);
         
-        freq.forEach((f, i) => update_band(f,i));
+        freq.forEach( (f, i) => update_band(f,i) );
     }
 
     function update_band( freq, i ){
@@ -183,5 +217,62 @@ jQuery(document).ready(function() {
             }
         })
     }
+
+    // returns true if n begins with str
+    var begins = function( t, str ) {
+        // only return true if str found at start of t
+        if ( t.indexOf(str) === 0 ) {
+            return true;
+        }
+        return false;
+    };
+
+    function variable_html( v, $t ) {
+        // h is the html
+        var h = '';
+        var title = 'plugin.settings.title';
+        if ( v != '' ) {
+            if ( begins( v, '$gd_track_' ) ) {
+                var x = v.split('$gd_track_')[1];
+                var h = `<span id="gd-track-${x}">`;
+                h += '</span';
+                $t.append(h);
+            }
+        }
+    };
+
+    function render_variables( container ) {
+        var $sections = $( container );
+        if ( $sections.length > 0 ) {
+            // find attributes and position section
+            $sections.each(function() {
+                var comments = $(this).getComments();
+                if ( comments.length > 0 ) {
+                    for ( var i = 0; i < comments.length; i++ ) {
+                        var v = extract_variable( comments[i] );
+                        if ( v != '' ) {
+                            variable_html( v, $(this) );
+                        }
+                    }
+                }
+            });
+        }
+    };
+
+    var extract_variable = function( v ) {
+        // ensure there's an open paren
+        if ( v.indexOf('{') != -1 ) {
+            var v1 = v.split('{')[1];
+            // ensure there's a closing paren
+            if ( v1.indexOf('}') != -1 ) {
+                var v2 = v1.split('}')[0];
+                // ensure the variable begins with $
+                if ( v2.indexOf('$') != -1 ) {
+                    return v2;
+                }
+            }
+        }
+        return '';
+    };
 
 });
