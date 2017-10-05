@@ -26,10 +26,17 @@ Genre: <!-- {$gd_track_genre} -->
 #### See the Beat
 
 Tracks <!-- {$gd_selector_tracks} -->
-- [Amen](https://soundcloud.com/ugotsta/son-of-no-man-amen)
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
-- [Saint Billy](https://soundcloud.com/ugotsta/saint-billy-version-b0-1)
+- [Duality](https://soundcloud.com/jacob-kauble/duality)
+- [Sword of Vermilion - Dungeon (Remix)](https://soundcloud.com/jacob-kauble/dungeonremix)
+- [Those Are Not Goblins](https://soundcloud.com/ugotsta/those-are-not-goblins)
+- [Voyage of the Mothership](https://soundcloud.com/ugotsta/voyage-of-the-mothership)
+- [Mechanized Supremacy](https://soundcloud.com/jacob-kauble/sets/mechanized-supremecy)
+- [Soteria](https://soundcloud.com/jacob-kauble/soteria)
 - [Insanity's Bliss](https://soundcloud.com/ugotsta/insanitys-bliss)
+- [Voices](https://soundcloud.com/ugotsta/voices)
+- [Zehanta's Theme](https://soundcloud.com/jacob-kauble/zehantas-theme)
+- [What I Want](https://soundcloud.com/ugotsta/what-i-want)
 
 Themes <!-- {$gd_css} -->
 
