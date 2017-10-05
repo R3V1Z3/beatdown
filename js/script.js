@@ -67,17 +67,6 @@ jQuery(document).ready(function() {
         return $eq;
     }
 
-    function get_track_info(url) {        
-        let resolveUrl = `//api.soundcloud.com/resolve.json?url=${url}/tracks&client_id=${client_id}`
-        fetch(resolveUrl, {
-            method: 'get'
-        }).then((response) => {
-            return response.json()
-        }).then((result) => {
-            return result;
-        })
-    }
-
     // configure soundcloud url
     function initialize_url() {
 
@@ -108,7 +97,7 @@ jQuery(document).ready(function() {
     }
 
     function sc_resolve( t, url ) {
-        var resolve_url = `http://api.soundcloud.com/resolve.json?url=${t}&client_id=${client_id}`;
+        var resolve_url = `//api.soundcloud.com/resolve.json?url=${t}&client_id=${client_id}`;
         $.get(resolve_url,
             function (result) {
                 console.log(result);
