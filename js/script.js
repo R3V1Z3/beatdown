@@ -1,7 +1,5 @@
 var bands = 32;
-var spacing = 10;
 
-var query = 'ugotsta';
 var client_id = 'ea6d4c6a6f367767516c9221a30c2ced';
 
 // webaudio configuration
@@ -17,6 +15,9 @@ let source = context.createMediaElementSource(audio);
 source.connect(analyser);
 analyser.connect(context.destination);
 
+var $gd;
+let params = (new URL(location)).searchParams;
+
 jQuery(document).ready(function() {
     
     var toggle_html='<span class="toggle"></span>';
@@ -26,21 +27,22 @@ jQuery(document).ready(function() {
                                 'content': 'README.md',
                                 'callback': main
     } );
-    var $gd = $('#wrapper').data('gitdown');
+    $gd = $('#wrapper').data('gitdown');
 
     function main() {
 
         // create eq container
-        var $eq = create_eq(bands, spacing);
+        var $eq = create_eq(bands);
         var width = $eq.width();
         var height = $eq.height();
 
         register_events();        
-        nextSound();
+        initialize_url();
         loop();
     }
 
-    function create_eq(bands, spacing) {
+    function create_eq(bands) {
+        var spacing = 10; // set default just for initial rendering
         var html = '<div class="eq"></div>';
         $('.inner').append(html);
         var $eq = $('.eq');
@@ -76,7 +78,49 @@ jQuery(document).ready(function() {
         })
     }
 
-    function nextSound(){
+    // configure soundcloud url
+    function initialize_url() {
+
+        var tracks = params.get('tracks');
+        if ( !tracks ) {
+            tracks = '223041674';
+        }
+
+        // base soundcloud url
+        var url = '//api.soundcloud.com/tracks/?';
+
+        // add client id
+        url += `client_id=${client_id}`;
+
+        // check if user provided a track number
+        var isnum = /^\d+$/.test(tracks);
+        if ( isnum ) {    
+            url += `&ids=${tracks}&`;
+            nextSound(url);
+        } else if ( tracks.indexOf('soundcloud.com') > -1 ) {
+            // soundcloud url specified so resolve it first
+            sc_resolve( tracks, url );
+        } else {
+            // handle request as a query
+            url += `&q=${tracks}`;
+            nextSound(url);
+        }
+    }
+
+    function sc_resolve( t, url ) {
+        var resolve_url = `http://api.soundcloud.com/resolve.json?url=${t}&client_id=${client_id}`;
+        $.get(resolve_url,
+            function (result) {
+                console.log(result);
+                url += `&ids=${result.id}&`;
+                console.log(url);
+                nextSound(url);
+            }
+        );
+    }
+
+    function nextSound(url){
+
         let http = new XMLHttpRequest();
         http.onload = () => { 
             if(http.responseText){
@@ -99,10 +143,6 @@ jQuery(document).ready(function() {
                 audio.play();
             }
         }
-        var url = '//api.soundcloud.com/tracks/?';
-        //url += 'q=' + query + '&';
-        url += 'ids=' + '223041674,225718449' + '&';
-        url += 'client_id=' + client_id;
         http.open("GET", url, true);
         http.send();
     }
@@ -131,6 +171,7 @@ jQuery(document).ready(function() {
 
         // set band width
         var width = $('.eq').width();
+        var spacing = parseInt( $band.css('margin-right') );
         var w = ( width / bands ) - spacing;
         $band.width(w);
         

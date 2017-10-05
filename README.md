@@ -8,7 +8,7 @@ Wait, why would anyone build a music visualizer with HTML? HTML and CSS offer im
 <!-- {$gd_help_ribbon} -->
 #### See the Beat
 
-Tracks <!-- {$gd_select_music_ids} -->
+Tracks <!-- {$gd_selector_tracks} -->
 - [Amen](https://soundcloud.com/ugotsta/son-of-no-man-amen)
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
 - [Saint Billy](https://soundcloud.com/ugotsta/saint-billy-version-b0-1)
