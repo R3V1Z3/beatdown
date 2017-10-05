@@ -4,7 +4,7 @@ A music visualizer in HTML themed using CSS.
 Now playing: <!-- {$gd_track_title} -->
 
 - Go to: [Track Info](#track-info)
-- [Wait, what is this?](#what-is-this)
+- Ask: [Wait, what is this?](#what-is-this)
 
 ## What is this?
 DownBeat is a music visualizer built with HTML. Wierd!
@@ -13,11 +13,11 @@ DownBeat is a music visualizer built with HTML. Wierd!
 HTML and CSS offer impressive visual power these days and while not as fast as native code, CSS facilitates customization by means that designers already know.
 
 ## Track Info
-<!-- {$gd_track_title} -->
+<!-- {$gd_track_title} --> <!-- {$gd_track_user} -->
 
 <!-- {$gd_track_artwork_url} -->
 
-Description: <!-- {$gd_track_description} -->
+<!-- {$gd_track_description} -->
 
 Genre: <!-- {$gd_track_genre} -->
 

@@ -119,6 +119,12 @@ html, body, #wrapper, .container {
   margin-bottom: 0.5em;
 }
 
+span#gd-track-artwork_url {
+  display: block;
+  float: left;
+  padding-right: 10px;
+}
+
 /* Slide related styles and animations */
 
 .section {

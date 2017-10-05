@@ -91,7 +91,11 @@ jQuery(document).ready(function() {
 
         var tracks = params.get('tracks');
         if ( !tracks ) {
-            tracks = '223041674';
+            // play random track from list
+            var t = $('.tracks-selector a.id').length;
+            var r = Math.floor(Math.random() * (t - 0)) + 0;
+            var l = $('.tracks-selector a.id').eq(r).attr('data-id');
+            tracks = l;
         }
 
         // base soundcloud url
@@ -131,7 +135,7 @@ jQuery(document).ready(function() {
         http.onload = () => { 
             if(http.responseText){
                 let result = JSON.parse(http.responseText);
-                let music = result[parseInt(Math.random() * result.length)];
+                let music = result[0];
                 
                 update_details(music);
 
@@ -144,7 +148,6 @@ jQuery(document).ready(function() {
     }
 
     function update_details(trackinfo){
-        console.log(trackinfo);
 
         // first update .track-url in .info panel
         var $tracks_url = $('.info .tracks-url');
@@ -163,6 +166,8 @@ jQuery(document).ready(function() {
                 h = `<a href="${trackinfo["permalink_url"]}">${trackinfo["title"]}</a>`;
             } else if ( i === 'artwork_url' ) {
                 h = `<img src="${trackinfo["artwork_url"]}"></img>`;
+            } else if ( i === 'user' || i === 'username' || i === 'author' ) {
+                h = ` - <a href="${trackinfo["user"].url}">${trackinfo["user"].username}</a>`;
             } else {
                 h = trackinfo[i];
             }
@@ -203,6 +208,8 @@ jQuery(document).ready(function() {
     }
 
     function register_events() {
+
+        // LEFT and RIGHT arrows
         $(document).keyup(function(e) {
             if( e.which == 37 || e.which == 100 ) {
                 var $prev = $('.toc a.current').prev()[0];
@@ -216,6 +223,13 @@ jQuery(document).ready(function() {
                 } else $next.click();
             }
         })
+
+        // play next song when track finishes
+        audio.addEventListener("ended", function(){
+            audio.currentTime = 0;
+            console.log("ended");
+       });
+
     }
 
     // returns true if n begins with str
