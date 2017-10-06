@@ -1,4 +1,4 @@
-# DownBeat
+# BeatDown
 A music visualizer in HTML themed using CSS.
 
 Now playing: <!-- {$gd_track_title} -->
@@ -7,7 +7,7 @@ Now playing: <!-- {$gd_track_title} -->
 - Ask: [Wait, what is this?](#what-is-this)
 
 ## What is this?
-DownBeat is a music visualizer built with HTML. Wierd!
+BeatDown is a music visualizer built with HTML. Wierd!
 
 ### Wait, why?
 HTML and CSS offer impressive visual power these days and while not as fast as native code, CSS facilitates customization by means that designers already know.

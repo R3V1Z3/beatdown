@@ -109,11 +109,6 @@ html, body, #wrapper, .container {
   text-shadow: 0 0 3px rgba(0,0,0,0.5);
 }
 
-.section a:hover {
-  background: rgba(255,255,100,0.25);
-  box-shadow: 0 0 6px rgba(255,255,100,0.25);
-}
-
 .section ul {
   padding: 20px 0px;
   list-style: none;

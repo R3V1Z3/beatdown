@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
     var toggle_html='<span class="toggle"></span>';
 
     // attach the plugin to an element
-    $('#wrapper').gitdown( {    'title': 'DownBeat',
+    $('#wrapper').gitdown( {    'title': 'BeatDown',
                                 'content': 'README.md',
                                 'callback': main
     } );
@@ -61,8 +61,7 @@ jQuery(document).ready(function() {
 
     function create_eq(bands) {
         var spacing = 10; // set default just for initial rendering
-        var html = '<div class="eq"></div>';
-        $('.inner').append(html);
+        $('.inner').append('<div class="eq"></div>');
         var $eq = $('.eq');
         var width = $eq.width();
         var height = $eq.height();
@@ -70,7 +69,7 @@ jQuery(document).ready(function() {
         var band_width = ( width / bands ) - spacing;
         var band_height = 0;
 
-        html = '<div class="eq-inner">';
+        var html = '<div class="eq-inner">';
         var x = 0;
         for ( var i = 0; i < bands; i++ ) {
             html += '<div class="band band-' + i + '"';
