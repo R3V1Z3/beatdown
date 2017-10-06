@@ -43,6 +43,7 @@ Tracks <!-- {$gd_selector_tracks} -->
 Themes <!-- {$gd_css} -->
 
 Layouts <!-- {$gd_gist} -->
+- [Just the Info](https://gist.github.com/Ugotsta/d640574f8008ec90c75443843464d0e6)
 
 <!-- {$gd_toc="Content"} -->
 <!-- {$gd_hide} -->

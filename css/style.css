@@ -82,7 +82,7 @@ html, body, #wrapper, .container {
   background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0.1) 45%,rgba(255,255,255,0) 78%,rgba(255,255,255,0) 100%);
   border: none;
   box-shadow: inset 0 4px rgba(0,0,0,0.75);
-  mix-blend-mode: overlay;
+  mix-blend-mode: luminosity;
 }
 
 .section .content {
@@ -166,8 +166,8 @@ span#gd-track-artwork_url {
 }
 
 @keyframes out {
-  0% { left: 0%; opacity: 1; }
-  100% { left: 100%; opacity: 0; }
+  0% { right: 0%; opacity: 1; }
+  100% { right: -100%; opacity: 0; }
 }
 
 @keyframes in-reverse {
@@ -176,8 +176,8 @@ span#gd-track-artwork_url {
 }
 
 @keyframes out-reverse {
-  100% { left: 0%; opacity: 1; }
-  0% { left: 100%; opacity: 0; }
+  100% { right: 0%; opacity: 1; }
+  0% { right: -100%; opacity: 0; }
 }
 
 /* ------------------------------------------------------------------------ */
@@ -198,6 +198,10 @@ span#gd-track-artwork_url {
 }
 
 /* Keypress styling */
+.info kbd {
+  color: #000;
+}
+
 kbd {
   display: inline-block;
   padding: 3px 5px;
