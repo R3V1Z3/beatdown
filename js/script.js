@@ -52,7 +52,6 @@ jQuery(document).ready(function() {
         analyser.fftSize = bands * 2;
 
         audio = new Audio();
-        audio.loop = true;
         audio.crossOrigin = 'anonymous';
 
         let source = context.createMediaElementSource(audio);
@@ -171,7 +170,7 @@ jQuery(document).ready(function() {
             } else {
                 h = trackinfo[i];
             }
-            $(this).append(h);
+            $(this).html(h);
         });
     }
 
@@ -227,7 +226,7 @@ jQuery(document).ready(function() {
         // play next song when track finishes
         audio.addEventListener("ended", function(){
             audio.currentTime = 0;
-            console.log("ended");
+            initialize_url();
        });
 
     }

@@ -95,9 +95,13 @@ html, body, #wrapper, .container {
 
 .gd-default .content a {
   color: black;
-  text-shadow: 0 0 3px rgba(255,255,255,0.75);
+  font-weight: bold;
+  text-shadow: 1px 1px 2px white,2px 2px 4px black;
   text-decoration: none;
-  filter: invert(100%);
+}
+
+.gd-default .content a:hover {
+  background-color: white;
 }
 
 .section a.handle {
