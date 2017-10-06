@@ -19,7 +19,6 @@ html, body, #wrapper, .container {
 }
 
 * {
-  transition: none;
   margin: 0;
   padding: 0;
   line-height: 120%;
@@ -37,6 +36,7 @@ html, body, #wrapper, .container {
 }
 
 .eq .band {
+  transition: none;
   position: absolute;
   background: black;
   bottom: 0;
@@ -98,6 +98,8 @@ html, body, #wrapper, .container {
   font-weight: bold;
   text-shadow: 1px 1px 2px white,2px 2px 4px black;
   text-decoration: none;
+  border-radius: 5px;
+  padding: 2px 8px;
 }
 
 .gd-default .content a:hover {
@@ -107,6 +109,11 @@ html, body, #wrapper, .container {
 .section a.handle {
   pointer-events: none;
   text-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.gd-default .section a.handle {
+  text-shadow: 0 0 2px black, 3px 3px 2px black;
+  color: white;
 }
 
 .section ul {

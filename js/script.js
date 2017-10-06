@@ -20,7 +20,8 @@ jQuery(document).ready(function() {
     // attach the plugin to an element
     $('#wrapper').gitdown( {    'title': 'BeatDown',
                                 'content': 'README.md',
-                                'callback': main
+                                'callback': main,
+                                'var_callback': gd_vars
     } );
     $gd = $('#wrapper').data('gitdown');
 
@@ -228,16 +229,50 @@ jQuery(document).ready(function() {
             initialize_url();
        });
 
+        // drag-and-drop file handler for local files
+        var $c = $('.inner');
+        $c.on( 'dragenter', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $(this).css( 'filter', 'invert(100%)' );
+        });
+        $c.on( 'dragover', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+        $c.on( 'dragleave', function (e) {
+            $(this).css( 'filter', 'none' );
+        });
+        $c.on( 'drop', function (e) {
+
+            $(this).css( 'filter', 'none' );
+            e.preventDefault();
+            var files = e.originalEvent.dataTransfer.files;
+
+            //We need to send dropped files to Server
+            handle_file_upload(files);
+        });
+    }
+
+    function handle_file_upload(f) {
+        // for now, we'll just play the first dropped file
+        let url = URL.createObjectURL( f[0] );
+        audio.src = url;
+        audio.play();
     }
 
     // returns true if n begins with str
-    var begins = function( t, str ) {
+    function begins( t, str ) {
         // only return true if str found at start of t
         if ( t.indexOf(str) === 0 ) {
             return true;
         }
         return false;
     };
+
+    function gd_vars(x) {
+        return x;
+    }
 
     function variable_html( v, $t ) {
         // h is the html

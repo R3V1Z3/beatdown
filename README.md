@@ -23,7 +23,9 @@ Genre: <!-- {$gd_track_genre} -->
 
 # Tracks <!-- {$gd_info} -->
 <!-- {$gd_help_ribbon} -->
-#### See the Beat
+#### Seer of Beats
+
+<!-- {$gd_track_volume} -->
 
 Tracks <!-- {$gd_selector_tracks} -->
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
