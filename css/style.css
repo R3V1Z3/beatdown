@@ -202,20 +202,6 @@ span#gd-track-artwork_url {
   color: #000;
 }
 
-kbd {
-  display: inline-block;
-  padding: 3px 5px;
-  line-height: 10px;
-  vertical-align: middle;
-  color: #000;
-  font-size: 1em;
-  font-weight: bold;
-  background: #F1F0ED;
-  border: 3px double rgba(0,0,0,0.35);
-  padding: 6px 10px;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.25);
-}
-
 /* Scrollbar styling */
 ::-webkit-scrollbar {
     background: rgba(255, 255, 255, 0.2);
