@@ -29,16 +29,17 @@ Genre: <!-- {$gd_track_genre} -->
 
 Tracks <!-- {$gd_selector_tracks} -->
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
-- [Duality](https://soundcloud.com/jacob-kauble/duality)
-- [Sword of Vermilion - Dungeon (Remix)](https://soundcloud.com/jacob-kauble/dungeonremix)
+- [Glitchers](https://soundcloud.com/ugotsta/glitchers)
 - [Those Are Not Goblins](https://soundcloud.com/ugotsta/those-are-not-goblins)
 - [Voyage of the Mothership](https://soundcloud.com/ugotsta/voyage-of-the-mothership)
-- [Mechanized Supremacy](https://soundcloud.com/jacob-kauble/sets/mechanized-supremecy)
-- [Soteria](https://soundcloud.com/jacob-kauble/soteria)
 - [Insanity's Bliss](https://soundcloud.com/ugotsta/insanitys-bliss)
 - [Voices](https://soundcloud.com/ugotsta/voices)
-- [Zehanta's Theme](https://soundcloud.com/jacob-kauble/zehantas-theme)
-- [What I Want](https://soundcloud.com/ugotsta/what-i-want)
+- [Something in the Basement](https://soundcloud.com/ugotsta/something-in-the-basement)
+- [Depths](https://soundcloud.com/ugotsta/depths)
+- [Breathe](https://soundcloud.com/ugotsta/breathe)
+- [Ultima 6 - Among the Stones](https://soundcloud.com/ugotsta/ultima-6-among-the-stones)
+- [Ultimate 6 - Choose your Destiny](https://soundcloud.com/ugotsta/ultima-6-choose-your-destiny)
+- [Chronotrigger - Gato's Dub](https://soundcloud.com/ugotsta/chronotrigger-gatos-dub?in=ugotsta/sets/remixes)
 
 Themes <!-- {$gd_css} -->
 
