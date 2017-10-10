@@ -32,7 +32,7 @@ jQuery(document).ready(function() {
         
         if ( params.has('bands') ) {
             bands = params.get('bands');
-        } else bands = 16;
+        } else bands = 64;
         if ( bands < 16 ) bands = 16;
 
         configure_webaudio(bands);
@@ -48,16 +48,68 @@ jQuery(document).ready(function() {
 
     function configure_webaudio(bands) {
         // webaudio configuration
-        let context = new AudioContext();
+        var context = new AudioContext();
         analyser = context.createAnalyser();
-        analyser.fftSize = bands * 2;
+        //analyser.maxDecibels = -25;
+        analyser.minDecibels = -90;
+        analyser.fftSize = 2048;//bands * 2;
+        analyser.smoothingTimeConstant = 0.8;
 
+        var filter = context.createBiquadFilter();
+        filter.type = "highpass";
+        filter.frequency.value = 50;
+        filter.Q.value = 1;
+
+        var gain = context.createGain();
+        
         audio = new Audio();
         audio.crossOrigin = 'anonymous';
 
-        let source = context.createMediaElementSource(audio);
-        source.connect(analyser);
-        analyser.connect(context.destination);
+        var source = context.createMediaElementSource(audio);
+        source.connect(gain);
+        gain.connect(filter);
+        filter.connect(analyser);
+        gain.connect(context.destination);
+    }
+
+    function loop(){
+        window.requestAnimationFrame(loop);
+        var freq = new Uint8Array(bands);
+        analyser.getByteFrequencyData(freq);
+        
+        freq.forEach( (f, i) => update_band(f, i) );
+    }
+
+    function convertRange( value, r1, r2 ) { 
+        return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
+    }
+
+    function update_band( freq, i ){
+        var $band = $('.eq .band-' + i);
+        $band.attr('data-range', freq);
+        
+        // add frequency to data in case user wants to utilize it
+        $band.attr('data-f', freq);
+
+        // freq maxes at 256, scale freq to fit eq height
+        var h = $('.eq').height();
+        var f = convertRange( freq, [0, 256], [0, h] );
+
+        // accentuate peaks by scaling based on nearness to height
+        var scale = convertRange( f, [0, h], [0, 1] );
+        f = f * scale;
+        
+        // set band height
+        $band.height(f);
+
+        // set band width
+        var width = $('.eq').width();
+        var spacing = parseInt( $band.css('margin-right') );
+        var w = ( width / bands ) - spacing;
+        $band.width(w);
+        
+        // set band's left position
+        $band.css( 'left', i * ( width / bands ) );
     }
 
     function create_eq(bands) {
@@ -172,38 +224,6 @@ jQuery(document).ready(function() {
             }
             $(this).html(h);
         });
-    }
-
-    function loop(){
-        window.requestAnimationFrame(loop);
-        let freq = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(freq);
-
-        let data = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteTimeDomainData(data);
-        
-        freq.forEach( (f, i) => update_band(f,i) );
-    }
-
-    function update_band( freq, i ){
-        var $band = $('.eq .band-' + i);
-        $band.attr('data-range', freq);
-
-        // freq maxes at 256, scale freq to fit eq height
-        var h = $('.eq').height();
-        var f = 0 + (h - 0) * (freq - 0) / (0 - -256);
-        
-        // set band height
-        $band.height(f);
-
-        // set band width
-        var width = $('.eq').width();
-        var spacing = parseInt( $band.css('margin-right') );
-        var w = ( width / bands ) - spacing;
-        $band.width(w);
-        
-        // set band's left position
-        $band.css( 'left', i * ( width / bands ) );
     }
 
     function register_events() {

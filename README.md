@@ -42,6 +42,7 @@ Tracks <!-- {$gd_selector_tracks} -->
 - [Chronotrigger - Gato's Dub](https://soundcloud.com/ugotsta/chronotrigger-gatos-dub?in=ugotsta/sets/remixes)
 
 Themes <!-- {$gd_css} -->
+- [Monsterrat](https://gist.github.com/Ugotsta/1e46bee3b3340ba0f96f2a14ff373780)
 
 Layouts <!-- {$gd_gist} -->
 - [Just the Info](https://gist.github.com/Ugotsta/d640574f8008ec90c75443843464d0e6)

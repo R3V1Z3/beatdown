@@ -42,7 +42,7 @@ html, body, #wrapper, .container {
   bottom: 0;
   z-index: 100;
   pointer-events: none;
-  margin-right: 10px;
+  margin-right: 0.35em;
 }
 
 html, body, #wrapper, .container {
