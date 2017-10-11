@@ -50,9 +50,9 @@ jQuery(document).ready(function() {
         // webaudio configuration
         var context = new AudioContext();
         analyser = context.createAnalyser();
-        //analyser.maxDecibels = -25;
+        analyser.maxDecibels = -25;
         analyser.minDecibels = -90;
-        analyser.fftSize = 2048;//bands * 2;
+        analyser.fftSize = 2048;
         analyser.smoothingTimeConstant = 0.8;
 
         var filter = context.createBiquadFilter();

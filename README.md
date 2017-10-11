@@ -25,7 +25,9 @@ Genre: <!-- {$gd_track_genre} -->
 <!-- {$gd_help_ribbon} -->
 #### Seer of Beats
 
-<!-- {$gd_track_volume} -->
+<!-- {$gd_slider_volume} -->
+
+<!-- {$gd_choice_bands="8,16,32,64,128"} -->
 
 Tracks <!-- {$gd_selector_tracks} -->
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
@@ -43,6 +45,8 @@ Tracks <!-- {$gd_selector_tracks} -->
 
 Themes <!-- {$gd_css} -->
 - [Monsterrat](https://gist.github.com/Ugotsta/1e46bee3b3340ba0f96f2a14ff373780)
+- [Glitchers](https://gist.github.com/Ugotsta/2dca639c6647a709846ddbabeeb98e62)
+- [Glitchers](https://gist.github.com/Ugotsta/2dca639c6647a709846ddbabeeb98e62)
 
 Layouts <!-- {$gd_gist} -->
 - [Just the Info](https://gist.github.com/Ugotsta/d640574f8008ec90c75443843464d0e6)
