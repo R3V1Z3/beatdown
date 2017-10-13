@@ -33,7 +33,7 @@ jQuery(document).ready(function() {
         if ( params.has('bands') ) {
             bands = params.get('bands');
         } else bands = 64;
-        if ( bands < 16 ) bands = 16;
+        if ( bands < 4 ) bands = 4;
 
         configure_webaudio(bands);
 
