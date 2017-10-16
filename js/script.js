@@ -2,7 +2,7 @@ var params = (new URL(location)).searchParams;
 var bands;
 
 var client_id = 'ea6d4c6a6f367767516c9221a30c2ced'; // soundcloud client_id
-var analyzer, audio; // for configure_webaudio
+var analyzer, audio, gain; // for configure_webaudio
 var $gd;
 
 jQuery(document).ready(function() {
@@ -37,6 +37,10 @@ jQuery(document).ready(function() {
 
         configure_webaudio(bands);
 
+        // set initial volume based on slider
+        var v = $('.info .slider.volume input').val();
+        gain.gain.value = v;
+
         // create eq container
         var $eq = create_eq(bands);
 
@@ -60,7 +64,7 @@ jQuery(document).ready(function() {
         filter.frequency.value = 50;
         filter.Q.value = 1;
 
-        var gain = context.createGain();
+        gain = context.createGain();
         
         audio = new Audio();
         audio.crossOrigin = 'anonymous';
@@ -229,6 +233,13 @@ jQuery(document).ready(function() {
 
     function register_events() {
 
+        // volume change
+        $('.info .slider.volume input').on('input change', function(e) {
+            var v = $(this).val();
+            gain.gain.value = v;
+        });
+
+        // band change
         $('.info .field.choices.bands .choice').click(function(){
             var value = $(this).attr('data-value');
             bands = value;

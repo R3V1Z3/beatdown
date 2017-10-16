@@ -25,10 +25,6 @@ Genre: <!-- {$gd_track_genre} -->
 <!-- {$gd_help_ribbon} -->
 #### Seer of Beats
 
-<!-- {$gd_slider_volume} -->
-
-<!-- {$gd_choice_bands="8,16,32,*64,128"} -->
-
 Tracks <!-- {$gd_selector_tracks} -->
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
 - [Glitchers](https://soundcloud.com/ugotsta/glitchers)
@@ -43,6 +39,10 @@ Tracks <!-- {$gd_selector_tracks} -->
 - [Ultimate 6 - Choose your Destiny](https://soundcloud.com/ugotsta/ultima-6-choose-your-destiny)
 - [Chronotrigger - Gato's Dub](https://soundcloud.com/ugotsta/chronotrigger-gatos-dub?in=ugotsta/sets/remixes)
 
+<!-- {$gd_choice_bands="8,16,32,*64,128"} -->
+
+<!-- {$gd_slider_volume="1,0,1,0.01"} -->
+
 Themes <!-- {$gd_css} -->
 - [Monsterrat](https://gist.github.com/Ugotsta/1e46bee3b3340ba0f96f2a14ff373780)
 - [Glitchers](https://gist.github.com/Ugotsta/2dca639c6647a709846ddbabeeb98e62)
@@ -51,5 +51,6 @@ Themes <!-- {$gd_css} -->
 Layouts <!-- {$gd_gist} -->
 - [Just the Info](https://gist.github.com/Ugotsta/d640574f8008ec90c75443843464d0e6)
 
-<!-- {$gd_toc="Content"} -->
+<!-- {$gd_toc="Slides"} -->
+
 <!-- {$gd_hide} -->
