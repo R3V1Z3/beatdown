@@ -123,18 +123,19 @@ jQuery(document).ready(function() {
         var band_height = 0;
 
         var html = '<div class="eq-inner">';
-        var x = 0;
-        for ( var i = 0; i < bands; i++ ) {
-            html += '<div class="band band-' + i + '"';
-            html += ' style="width:' + band_width + 'px; height:' + band_height + 'px;';
-            html += ' left: ' + x + 'px;';
-            html += '">';
-            html += '</div>';
-            x += band_width + spacing;
-        }
+        html += band_html(bands);
         html += '</div>';
         $eq.append(html);
         return $eq;
+    }
+
+    function band_html(bands) {
+        var x = 0;
+        var html = '';
+        for ( var i = 0; i < bands; i++ ) {
+            html += `<div class="band band-${i}"></div>`;
+        }
+        return html;
     }
 
     // configure soundcloud url
@@ -227,6 +228,15 @@ jQuery(document).ready(function() {
     }
 
     function register_events() {
+
+        $('.info .field.choices.bands .choice').click(function(){
+            var value = $(this).attr('data-value');
+            bands = value;
+            // remove bands then create new ones
+            $('.band').remove();
+            var $eq_inner = $('.eq .eq-inner');
+            $eq_inner.append( band_html(bands) );
+        });
 
         // LEFT and RIGHT arrows
         $(document).keyup(function(e) {

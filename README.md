@@ -27,7 +27,7 @@ Genre: <!-- {$gd_track_genre} -->
 
 <!-- {$gd_slider_volume} -->
 
-<!-- {$gd_choice_bands="8,16,32,64,128"} -->
+<!-- {$gd_choice_bands="8,16,32,*64,128"} -->
 
 Tracks <!-- {$gd_selector_tracks} -->
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
