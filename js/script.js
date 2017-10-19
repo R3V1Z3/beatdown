@@ -185,22 +185,34 @@ jQuery(document).ready(function() {
         );
     }
 
+    function get(url) {
+        return new Promise( function (resolve, reject) {
+            var http = new XMLHttpRequest();
+            http.open('GET', url);
+            http.onload = function () {
+                if ( http.status === 200 ) {
+                    resolve(http.response);
+                } else {
+                    reject( Error(http.statusText) );
+                }
+            };
+            http.onerror = function () {
+                reject( Error("Error with request.") );
+            };
+            http.send();
+        });
+    }
+
     function play(url){
-
-        let http = new XMLHttpRequest();
-        http.onload = () => { 
-            if(http.responseText){
-                let result = JSON.parse(http.responseText);
-                let music = result[0];
-                
-                update_details(music);
-
-                audio.src = music.stream_url + '?client_id=' + client_id;
-                audio.play();
-            }
-        }
-        http.open("GET", url, true);
-        http.send();
+        get(url).then(function (response) {
+            var result = JSON.parse(response);
+            var music = result[0];
+            update_details(music);
+            audio.src = music.stream_url + '?client_id=' + client_id;
+            audio.play();
+        }, function (error) {
+            console.error( "Request failed.", error );
+        });
     }
 
     function update_details(trackinfo){
