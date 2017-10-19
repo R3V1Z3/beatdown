@@ -1,4 +1,3 @@
-var params = (new URL(location)).searchParams;
 var bands;
 
 var client_id = 'ea6d4c6a6f367767516c9221a30c2ced'; // soundcloud client_id
@@ -27,12 +26,10 @@ jQuery(document).ready(function() {
 
     function main() {
 
-        // TODO: maybe add $gd method to get param or use default
-        // $gd.params_get('bands',32)
-        
-        if ( params.has('bands') ) {
-            bands = params.get('bands');
-        } else bands = 64;
+        bands = $gd.get_setting('bands');
+        if ( bands === undefined ) {
+            bands = 64;
+        }
         if ( bands < 4 ) bands = 4;
 
         configure_webaudio(bands);
@@ -145,7 +142,7 @@ jQuery(document).ready(function() {
     // configure soundcloud url
     function initialize_url() {
 
-        var tracks = params.get('tracks');
+        var tracks = $gd.get_param('tracks');
         if ( !tracks ) {
             // play random track from list
             var t = $('.tracks-selector a.id').length;
