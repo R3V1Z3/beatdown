@@ -1,8 +1,9 @@
 var bands;
+var track_data;
 
 var client_id = 'ea6d4c6a6f367767516c9221a30c2ced'; // soundcloud client_id
 var analyzer, audio, gain; // for configure_webaudio
-var $gd;
+var $gd, eid;
 
 jQuery(document).ready(function() {
 
@@ -23,28 +24,37 @@ jQuery(document).ready(function() {
                                 'var_callback': gd_vars
     } );
     $gd = $('#wrapper').data('gitdown');
+    eid = '#wrapper';
 
     function main() {
 
-        bands = $gd.get_setting('bands');
-        if ( bands === undefined ) {
-            bands = 64;
+        if ( !$gd.settings.loaded ) {
+            bands = $gd.get_setting('bands');
+            if ( bands === undefined ) {
+                bands = 64;
+            }
+            if ( bands < 4 ) bands = 4;
+    
+            configure_webaudio(bands);
+    
+            // set initial volume based on slider
+            var v = $('.info .slider.volume input').val();
+            gain.gain.value = v;
+    
+            // create eq container
+            create_eq(bands);
+    
+            render_variables( '.inner .section *' );
+            register_events();
+            initialize_url();
+            loop();
+        } else {
+            // user has changed the markdown file at this point so lets render it
+            create_eq(bands);
+            render_variables( '.inner .section *' );
+            update_details(track_data);
+            register_events();
         }
-        if ( bands < 4 ) bands = 4;
-
-        configure_webaudio(bands);
-
-        // set initial volume based on slider
-        var v = $('.info .slider.volume input').val();
-        gain.gain.value = v;
-
-        // create eq container
-        var $eq = create_eq(bands);
-
-        render_variables( '.inner .section *' );
-        register_events();
-        initialize_url();
-        loop();
     }
 
     function configure_webaudio(bands) {
@@ -182,30 +192,12 @@ jQuery(document).ready(function() {
         );
     }
 
-    function get(url) {
-        return new Promise( function (resolve, reject) {
-            var http = new XMLHttpRequest();
-            http.open('GET', url);
-            http.onload = function () {
-                if ( http.status === 200 ) {
-                    resolve(http.response);
-                } else {
-                    reject( Error(http.statusText) );
-                }
-            };
-            http.onerror = function () {
-                reject( Error("Error with request.") );
-            };
-            http.send();
-        });
-    }
-
     function play(url){
-        get(url).then(function (response) {
+        $gd.get(url).then(function (response) {
             var result = JSON.parse(response);
-            var music = result[0];
-            update_details(music);
-            audio.src = music.stream_url + '?client_id=' + client_id;
+            track_data = result[0];
+            update_details(track_data);
+            audio.src = track_data.stream_url + '?client_id=' + client_id;
             audio.play();
         }, function (error) {
             console.error( "Request failed.", error );
@@ -241,6 +233,13 @@ jQuery(document).ready(function() {
     }
 
     function register_events() {
+
+        $(eid).on('classChange', function() {
+            if ( $(this).hasClass('content-loaded') ) {
+                render_variables( '.inner .section *' );
+                update_details(track_data);
+            }
+       });
 
         // volume change
         $('.info .slider.volume input').on('input change', function(e) {
@@ -327,7 +326,6 @@ jQuery(document).ready(function() {
     function variable_html( v, $t ) {
         // h is the html
         var h = '';
-        var title = 'plugin.settings.title';
         if ( v != '' ) {
             if ( begins( v, '$gd_track_' ) ) {
                 var x = v.split('$gd_track_')[1];
