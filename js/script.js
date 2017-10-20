@@ -242,12 +242,15 @@ jQuery(document).ready(function() {
             initialize_url();
         });
 
-        $(eid).on('classChange', function() {
-            if ( $(this).hasClass('content-loaded') ) {
-                render_variables( '.inner .section *' );
-                update_details(track_data);
+        // SELECTOR KEYPRESS
+        $( eid + ' .info .tracks-input.selector-input' ).keyup(function(e) {
+            if( e.which == 13 ) {
+                var id = $(this).val();
+                $gd.set_param( 'tracks', id );
+                audio.currentTime = 0;
+                initialize_url();
             }
-       });
+        });
 
         // volume change
         $('.info .slider.volume input').on('input change', function(e) {
