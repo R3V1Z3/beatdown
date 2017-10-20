@@ -234,6 +234,14 @@ jQuery(document).ready(function() {
 
     function register_events() {
 
+        // song change
+        $( eid + ' .info .tracks-selector a.id' ).click(function(event) {
+            var id = $(this).attr('data-id');
+            $gd.set_param( 'tracks', id );
+            audio.currentTime = 0;
+            initialize_url();
+        });
+
         $(eid).on('classChange', function() {
             if ( $(this).hasClass('content-loaded') ) {
                 render_variables( '.inner .section *' );
