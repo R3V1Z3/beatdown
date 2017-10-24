@@ -14,12 +14,11 @@ jQuery(document).ready(function() {
         }).get();
     };
 
-    
     var toggle_html='<span class="toggle"></span>';
 
     // attach the plugin to an element
     $('#wrapper').gitdown( {    'title': 'BeatDown',
-                                'content': 'README.md',
+                                'file': 'README.md',
                                 'callback': main,
                                 'var_callback': gd_vars
     } );
@@ -46,6 +45,7 @@ jQuery(document).ready(function() {
     
             render_variables( '.inner .section *' );
             register_events();
+            register_events_onstartup();
             initialize_url();
             loop();
         } else {
@@ -232,6 +232,25 @@ jQuery(document).ready(function() {
         });
     }
 
+    // events to be loaded only at startup
+    function register_events_onstartup() {
+        // LEFT and RIGHT arrows
+        document.addEventListener('keyup', (event) => {
+            var key = event.key;
+            if ( key === 'ArrowLeft' ) {
+                var $prev = $('.toc a.current').prev()[0];
+                if (typeof $prev === "undefined") {
+                    $('.toc a:last-child')[0].click();
+                } else $prev.click();
+            } else if ( key === 'ArrowRight' ) {
+                var $next = $('.toc a.current').next()[0];
+                if (typeof $next === "undefined") {
+                    $('.toc a:first-child')[0].click();
+                } else $next.click();
+            }
+          }, false);
+    }
+
     function register_events() {
 
         // song change
@@ -267,21 +286,6 @@ jQuery(document).ready(function() {
             var $eq_inner = $('.eq .eq-inner');
             $eq_inner.append( band_html(bands) );
         });
-
-        // LEFT and RIGHT arrows
-        $(document).keyup(function(e) {
-            if( e.which == 37 || e.which == 100 ) {
-                var $prev = $('.toc a.current').prev()[0];
-                if (typeof $prev === "undefined") {
-                    $('.toc a:last-child')[0].click();
-                } else $prev.click();
-            } else if (e.keyCode === 39 || e.which == 102 ) {
-                var $next = $('.toc a.current').next()[0];
-                if (typeof $next === "undefined") {
-                    $('.toc a:first-child')[0].click();
-                } else $next.click();
-            }
-        })
 
         // play next song when track finishes
         audio.addEventListener("ended", function(){
