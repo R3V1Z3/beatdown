@@ -52,7 +52,6 @@ jQuery(document).ready(function() {
             // user has changed the markdown file at this point so lets render it
             create_eq(bands);
             render_variables( '.inner .section *' );
-            update_details(track_data);
             register_events();
         }
     }
@@ -205,7 +204,6 @@ jQuery(document).ready(function() {
     }
 
     function update_details(trackinfo){
-
         // first update .track-url in .info panel
         var $tracks_url = $('.info .tracks-url');
         if ( $tracks_url.length > 0 ) {
