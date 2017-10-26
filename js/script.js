@@ -86,7 +86,11 @@ jQuery(document).ready(function() {
         window.requestAnimationFrame(loop);
         var freq = new Uint8Array(bands);
         analyser.getByteFrequencyData(freq);
-        
+
+        // remove .peak classes then update bands
+        $(eid).removeClass(function (index, className) {
+            return (className.match (/(^|\s)peak-\S+/g) || []).join(' ');
+        });
         freq.forEach( (f, i) => update_band(f, i) );
     }
 
@@ -96,10 +100,21 @@ jQuery(document).ready(function() {
 
     function update_band( freq, i ){
         var $band = $('.eq .band-' + i);
-        $band.attr('data-range', freq);
         
-        // add frequency to data in case user wants to utilize it
+        // add data to band div in case user wants to utilize it
+        $band.attr('data-range', freq);
         $band.attr('data-f', freq);
+
+        // add css classes to main div when peaks are breached
+        // eg: .peak-1
+        var p = convertRange( freq, [0, 256], [0, 1] );
+        
+        // special consideration for the much used bass bands
+        if ( i === 3 ) p -= 0.25;
+        if ( i === 4 ) p -= 0.15;
+        if ( p > $gd.settings.peak ) {
+            $(eid).addClass(`peak-${i}`);
+        }
 
         // freq maxes at 256, scale freq to fit eq height
         var h = $('.eq').height();

@@ -12,6 +12,22 @@
   }
 }
 
+.gd-default .peak-3 .section {
+  transform: scale(1.25);
+}
+
+.gd-default .peak-4 .section {
+  padding: 40px;
+}
+
+.gd-default .peak-8 .inner {
+  box-shadow: inset 0 0 50px black,
+  inset 0 0 100px black,
+  inset 0 0 200px black,
+  inset 0 0 300px black,
+  inset 0 0 500px black;
+}
+
 @page { size:8.5in 11in; margin: 0.25cm }
 
 html, body, #wrapper, .container {
