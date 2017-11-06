@@ -61,7 +61,6 @@ jQuery(document).ready(function() {
         $('.section a img').each(function(){
             var alt = $(this).attr('alt');
             if ( alt === 'bg-video') {
-                console.log('found');
                 var url = $(this).parent().attr('href');
                 var id = '';
                 if(url.match('//(www.)?youtube|youtu\.be')){
