@@ -48,9 +48,24 @@ Themes <!-- {$gd_css} -->
 - [Glitchers](https://gist.github.com/Ugotsta/2dca639c6647a709846ddbabeeb98e62)
 - [Glitchers](https://gist.github.com/Ugotsta/2dca639c6647a709846ddbabeeb98e62)
 
-<!-- {$gd_slider_peak="0.7,0,1,0.01"} -->
+<!-- {$gd_slider_fontsize="100,50,300,1,%"} -->
+
+<!-- {$gd_select_primary-color} -->
+- Default
+- Slategrey
+- Burlywood
+- Antiquewhite
+- Green
+- Magenta
+- Brown
+- Red
+- Orange
+- Blue
+- Dodgerblue
 
 <!-- {$gd_choice_bands="8,16,32,*64,128"} -->
+
+<!-- {$gd_slider_peak="0.7,0,1,0.01"} -->
 
 <!-- {$gd_collapsible_end_appearance} -->
 

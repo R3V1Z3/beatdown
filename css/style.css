@@ -12,6 +12,22 @@
   }
 }
 
+#player {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 70%;
+  height: 70%;
+  z-index: 0;
+  margin: auto;
+  filter: sepia(130%);
+  opacity: 0.3;
+  transform: rotate(-5deg) perspective(200px) rotateX(8deg) translateY(-50px);
+}
+
 .gd-default .peak-3 .section {
   transform: scale(1.25);
 }
