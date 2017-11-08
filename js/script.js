@@ -28,7 +28,9 @@ jQuery(document).ready(function() {
     function main() {
 
         if ( !$gd.settings.loaded ) {
-            bands = $gd.get_setting('bands');
+            bands = $gd.settings['bands'];
+            var b = $gd.get_param('bands');
+            if ( b > 0 ) bands = b;
             if ( bands === undefined ) {
                 bands = 64;
             }
@@ -58,6 +60,7 @@ jQuery(document).ready(function() {
     }
 
     function find_video_references() {
+        if ( $( eid + ' #player').length > 0 ) {} return;
         $('.section a img').each(function(){
             var alt = $(this).attr('alt');
             if ( alt === 'bg-video') {
