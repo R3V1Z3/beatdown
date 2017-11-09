@@ -51,18 +51,19 @@ jQuery(document).ready(function() {
             initialize_url();
             loop();
         } else {
-            find_video_references();
             // user has changed the markdown file at this point so lets render it
             create_eq(bands);
             render_variables( '.inner .section *' );
             register_events();
         }
+        find_video_references();
     }
 
     function find_video_references() {
-        if ( $( eid + ' #player').length > 0 ) {} return;
-        $('.section a img').each(function(){
+        $('a img').each(function(){
+            if ( $( '#player').length > 0 ) return;
             var alt = $(this).attr('alt');
+            console.log(alt);
             if ( alt === 'bg-video') {
                 var url = $(this).parent().attr('href');
                 var id = '';
