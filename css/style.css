@@ -79,6 +79,7 @@ html, body, #wrapper, .container {
 }
 
 .inner {
+  transition: all 0.75s linear;
   position: absolute;
   top: 0;
   bottom: 0;

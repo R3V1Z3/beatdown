@@ -50,19 +50,6 @@ Themes <!-- {$gd_css} -->
 
 <!-- {$gd_slider_fontsize="100,50,600,1,%"} -->
 
-<!-- {$gd_select_primary-color} -->
-- Default
-- Slategrey
-- Burlywood
-- Antiquewhite
-- Green
-- Magenta
-- Brown
-- Red
-- Orange
-- Blue
-- Dodgerblue
-
 <!-- {$gd_choice_bands="8,16,32,*64,128"} -->
 
 <!-- {$gd_slider_peak="0.7,0,1,0.01"} -->
