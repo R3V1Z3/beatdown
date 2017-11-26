@@ -7,22 +7,21 @@ var analyzer, audio, gain; // for configure_webaudio
 const gd = new GitDown('#wrapper', {
     title: 'BeatDown',
     content: 'README.md',
-    callback: done
+    callback: main
 });
 
 const eid = gd.eid;
 
-function done() {
+function main() {
     
-    if ( gd.status.has('content-changed') || !gd.status.has('callback') ) {
-        bands = gd.settings['bands'];
-        var b = gd.get_param('bands');
-        if ( b > 0 ) bands = b;
-        if ( bands === undefined ) {
-            bands = 64;
-        }
-        if ( bands < 4 ) bands = 4;
+    if (gd.status.has('tracks-changed')) {
+        audio.currentTime = 0;
+        initialize_url();
+        return;
+    }
 
+    if ( !gd.status.has('callback') ) {
+        configure_bands();
         configure_webaudio(bands);
 
         // set initial volume based on slider
@@ -38,23 +37,31 @@ function done() {
         initialize_url();
         loop();
     } else {
-        // user has changed the markdown file at this point so lets render it
-        create_eq(bands);
-        // todo: is load_done() completing before the content is actually loaded?
-        // make sure gitdown core calls load_done() only after render_content() has finished
-        //
-        // check promise chain
         render_variables( '.inner .section *' );
-        register_events();
+        //register_events();
     }
     find_video_references();
+}
+
+function configure_bands() {
+    bands = gd.settings['bands'];
+    const b = gd.get_param('bands');
+    if ( b > 0 ) bands = b;
+    if ( bands === undefined ) {
+        bands = 64;
+    }
+    if ( bands < 4 ) bands = 4;
+
+    // remove bands then create new ones
+    $('.band').remove();
+    var $eq_inner = $('.eq .eq-inner');
+    $eq_inner.append( band_html(bands) );
 }
 
 function find_video_references() {
     $('a img').each(function(){
         if ( $( '#player').length > 0 ) return;
         var alt = $(this).attr('alt');
-        console.log(alt);
         if ( alt === 'bg-video') {
             var url = $(this).parent().attr('href');
             var id = '';
@@ -126,8 +133,8 @@ function update_band( freq, i ){
     var $band = $('.eq .band-' + i);
     
     // add data to band div in case user wants to utilize it
-    $band.attr('data-range', freq);
-    $band.attr('data-f', freq);
+    // $band.attr('data-range', freq);
+    // $band.attr('data-f', freq);
 
     // add css classes to main div when peaks are breached
     // eg: .peak-1
@@ -193,7 +200,7 @@ function randomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
-    }
+}
 
 // configure soundcloud url
 function initialize_url() {
@@ -251,6 +258,13 @@ function play(url){
     });
 }
 
+function handle_file_upload(f) {
+    // for now, we'll just play the first dropped file
+    let url = URL.createObjectURL( f[0] );
+    audio.src = url;
+    audio.play();
+}
+
 function update_details(trackinfo){
     // first update .track-url in .info panel
     let url = document.querySelector( eid + ' .info .tracks-url' );
@@ -260,6 +274,7 @@ function update_details(trackinfo){
 
     // now lets update all occurrences of $gd_track variables in content
     var $items = $('[id^="gd-track-"]');
+    console.log($items);
     if ( $items.length < 1 ) return;
     
     var h = '';
@@ -275,6 +290,30 @@ function update_details(trackinfo){
             h = trackinfo[i];
         }
         $(this).html(h);
+    });
+}
+
+function variable_html( v, el ) {
+    if ( v !== '' ) {
+        if ( gd.begins( v, 'gd_track_' ) ) {
+            var x = v.split('gd_track_')[1];
+            let c = `<span id="gd-track-${x}">`;
+            c += '</span>';
+            return [c, 'append'];
+        }
+    }
+};
+
+function render_variables(container) {
+    const variables = gd.get_variables(container);
+    variables.forEach((v) => {
+        const variable = v[0], el = v[1];
+        const result = variable_html( variable, el );
+        if ( result.length < 1 ) return;
+        const content = result[0], r = result[1];
+        if ( r === 'append' ) {
+            el.innerHTML += content;
+        }
     });
 }
 
@@ -300,16 +339,8 @@ function register_events_onstartup() {
 
 function register_events() {
 
-    // song change
-    $( eid + ' .info .tracks-selector a.id' ).unbind().click(function(event) {
-        var id = $(this).attr('data-id');
-        gd.set_param( 'tracks', id );
-        audio.currentTime = 0;
-        initialize_url();
-    });
-
     // SELECTOR KEYPRESS
-    $( eid + ' .info .tracks-input.selector-input' ).unbind().keyup(function(e) {
+    $( eid + ' .info .tracks-input.selector-input' ).unbind().keyup((e) => {
         if( e.which == 13 ) {
             var id = $(this).val();
             gd.set_param( 'tracks', id );
@@ -325,36 +356,33 @@ function register_events() {
     });
 
     // band change
-    $('.info .field.choices.bands .choice').click(function(){
+    $('.info .field.choices.bands .choice').click((e) => {
         var value = $(this).attr('data-value');
-        bands = value;
-        // remove bands then create new ones
-        $('.band').remove();
-        var $eq_inner = $('.eq .eq-inner');
-        $eq_inner.append( band_html(bands) );
+        bands = gd.update_parameter('bands', value);
+        configure_bands();
     });
 
     // play next song when track finishes
-    audio.addEventListener("ended", function(){
+    audio.addEventListener("ended", (e) =>{
         audio.currentTime = 0;
         initialize_url();
     });
 
     // drag-and-drop file handler for local files
     var $c = $('.inner');
-    $c.on( 'dragenter', function (e) {
+    $c.on( 'dragenter', function(e) {
         e.stopPropagation();
         e.preventDefault();
         $(this).css( 'filter', 'invert(100%)' );
     });
-    $c.on( 'dragover', function (e) {
+    $c.on( 'dragover', function(e) {
         e.stopPropagation();
         e.preventDefault();
     });
-    $c.on( 'dragleave', function (e) {
+    $c.on( 'dragleave', function(e) {
         $(this).css( 'filter', 'none' );
     });
-    $c.on( 'drop', function (e) {
+    $c.on( 'drop', function(e) {
 
         $(this).css( 'filter', 'none' );
         e.preventDefault();
@@ -362,45 +390,5 @@ function register_events() {
 
         //We need to send dropped files to Server
         handle_file_upload(files);
-    });
-}
-
-function handle_file_upload(f) {
-    // for now, we'll just play the first dropped file
-    let url = URL.createObjectURL( f[0] );
-    audio.src = url;
-    audio.play();
-}
-
-function variable_html( v, el ) {
-    var c = [];
-    if ( v !== '' ) {
-        if ( gd.begins( v, 'gd_track_' ) ) {
-            var x = v.split('gd_track_')[1];
-            var h = `<span id="gd-track-${x}">`;
-            c += '</span>';
-            return [c, 'append'];
-        }
-    }
-};
-
-function render_variables(container) {
-    const variables = gd.get_variables(container);
-    variables.forEach((v) => {
-        const variable = v[0], el = v[1];
-        const result = variable_html( variable, el );
-        if ( result.length < 1 ) return;
-        const content = result[0], r = result[1];
-        if ( r === 'html' ) {
-            el.innerHTML = content;
-        } else if ( r === 'text' ) {
-            el.textContent = content;
-        } else if ( r === 'append' ) {
-            el.innerHTML += content;
-        } else if ( r === 'before' ) {
-            el.innerHTML = content + el.innerHTML;
-        } else if ( r === 'after' ) {
-            el.innerHTML += content;
-        }
     });
 }

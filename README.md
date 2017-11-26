@@ -54,6 +54,8 @@ Themes <!-- {$gd_css} -->
 
 <!-- {$gd_slider_peak="0.7,0,1,0.01"} -->
 
+<!-- {$gd_theme_variables} -->
+
 <!-- {$gd_collapsible_end_appearance} -->
 
 <!-- {$gd_collapsible_slides} -->
