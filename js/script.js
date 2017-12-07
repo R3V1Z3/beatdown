@@ -305,16 +305,19 @@ function variable_html( v, el ) {
 };
 
 function render_variables(container) {
-    const variables = gd.get_variables(container);
-    variables.forEach((v) => {
-        const variable = v[0], el = v[1];
-        const result = variable_html( variable, el );
-        if ( result.length < 1 ) return;
-        const content = result[0], r = result[1];
-        if ( r === 'append' ) {
-            el.innerHTML += content;
-        }
-    });
+    gd.render_variable_spans( gd.eid + ' .info *' );
+    gd.update_variables( gd.eid + ' .info *' );
+
+    // const variables = gd.get_variables(container);
+    // variables.forEach((v) => {
+    //     const variable = v[0], el = v[1];
+    //     const result = variable_html( variable, el );
+    //     if ( result.length < 1 ) return;
+    //     const content = result[0], r = result[1];
+    //     if ( r === 'append' ) {
+    //         el.innerHTML += content;
+    //     }
+    // });
 }
 
 // events to be loaded only at startup
