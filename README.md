@@ -28,6 +28,7 @@ Genre: <!-- {$gd_track_genre} -->
 Tracks <!-- {$gd_selector_tracks} -->
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
 - [Glitchers](https://soundcloud.com/ugotsta/glitchers)
+- [Soar](https://soundcloud.com/ugotsta/soar)
 - [Those Are Not Goblins](https://soundcloud.com/ugotsta/those-are-not-goblins)
 - [Voyage of the Mothership](https://soundcloud.com/ugotsta/voyage-of-the-mothership)
 - [Insanity's Bliss](https://soundcloud.com/ugotsta/insanitys-bliss)
