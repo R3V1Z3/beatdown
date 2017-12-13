@@ -81,9 +81,9 @@ function find_video_references() {
             iframe += 'mute=1&';
             iframe += '" frameborder="0" allowfullscreen></iframe>';
             $('.inner').append(iframe);
+            // now remove original link
+            $(this).parent().remove();
         }
-        // now remove original link
-        $(this).parent().remove();
     });
 }
 
