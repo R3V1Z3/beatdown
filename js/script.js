@@ -7,6 +7,7 @@ var analyzer, audio, gain; // for configure_webaudio
 const gd = new GitDown('#wrapper', {
     title: 'BeatDown',
     content: 'README.md',
+    merge_gists: false,
     callback: main
 });
 
@@ -31,15 +32,12 @@ function main() {
         // create eq container
         create_eq(bands);
 
-        render_variables( eid + ' .inner .section *' );
         register_events();
         register_events_onstartup();
         initialize_url();
         loop();
-    } else {
-        render_variables( '.inner .section *' );
-        //register_events();
     }
+
     find_video_references();
 }
 
@@ -130,6 +128,7 @@ function convertRange( value, r1, r2 ) {
 }
 
 function update_band( freq, i ){
+    const band = document.querySelector('.eq .band-' + i);
     var $band = $('.eq .band-' + i);
     
     // add data to band div in case user wants to utilize it
@@ -138,21 +137,22 @@ function update_band( freq, i ){
 
     // add css classes to main div when peaks are breached
     // eg: .peak-1
-    var p = convertRange( freq, [0, 256], [0, 1] );
+    let p = convertRange( freq, [0, 256], [0, 1] );
     
     // special consideration for the much used bass bands
     if ( i === 3 ) p -= 0.25;
     if ( i === 4 ) p -= 0.15;
     if ( p > gd.settings.peak ) {
-        $(eid).addClass(`peak-${i}`);
+        const eid = document.getElementById( gd.eid.substr(1) );
+        eid.classList.add(`peak-${i}`);
     }
 
     // freq maxes at 256, scale freq to fit eq height
     var h = $('.eq').height();
-    var f = convertRange( freq, [0, 256], [0, h] );
+    let f = convertRange( freq, [0, 256], [0, h] );
 
     // accentuate peaks by scaling based on nearness to height
-    var scale = convertRange( f, [0, h], [0, 1] );
+    const scale = convertRange( f, [0, h], [0, 1] );
     f = f * scale;
     
     // set band height
@@ -165,7 +165,9 @@ function update_band( freq, i ){
     $band.width(w);
     
     // set band's left position
-    $band.css( 'left', i * ( width / bands ) );
+    const l = i * ( width / bands );
+    $band.css( 'left', l );
+    //band.setAttribute( 'style', `height:${f}; width:${w}; left:${l};` );
 }
 
 function create_eq(bands) {
@@ -196,7 +198,7 @@ function band_html(bands) {
     return html;
 }
 
-function randomInt(min, max) {
+function random_int(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
@@ -210,7 +212,7 @@ function initialize_url() {
         // play random track from list
         let a = document.querySelectorAll(eid + ' .tracks-selector a.id');
         if ( a !== null ) {
-            let random = randomInt( 0, a.length - 1 );
+            let random = random_int( 0, a.length - 1 );
             tracks = a[random].getAttribute('data-id');
         }
     }
@@ -273,51 +275,25 @@ function update_details(trackinfo){
     }
 
     // now lets update all occurrences of $gd_track variables in content
-    var $items = $('[id^="gd-track-"]');
-    console.log($items);
-    if ( $items.length < 1 ) return;
-    
-    var h = '';
-    $items.each(function(i, val){
-        var i = $(this).attr('id').split('gd-track-')[1];
-        if ( i === 'title' ) {
-            h = `<a href="${trackinfo["permalink_url"]}">${trackinfo["title"]}</a>`;
-        } else if ( i === 'artwork_url' ) {
-            h = `<img src="${trackinfo["artwork_url"]}"></img>`;
-        } else if ( i === 'user' || i === 'username' || i === 'author' ) {
-            h = ` - <a href="${trackinfo["user"].url}">${trackinfo["user"].username}</a>`;
-        } else {
-            h = trackinfo[i];
+    let trackvars = document.querySelectorAll(gd.eid + ' .section .gd-var');
+    if ( trackvars === null || trackvars.length < 1 ) return;
+
+    let h = '';
+    trackvars.forEach( (el) => {
+        let name = el.getAttribute('name');
+        if ( name.startsWith('gd_track_') ) {
+            let i = name.split('gd_track_')[1];
+            if ( i === 'title' ) {
+                el.innerHTML = `<a href="${trackinfo["permalink_url"]}">${trackinfo["title"]}</a>`;
+            } else if ( i === 'artwork_url' ) {
+                el.innerHTML = `<img src="${trackinfo["artwork_url"]}"></img>`;
+            } else if ( i === 'user' || i === 'username' || i === 'author' ) {
+                el.innerHTML = ` - <a href="${trackinfo["user"].url}">${trackinfo["user"].username}</a>`;
+            } else {
+                el.innerHTML = trackinfo[i];
+            }
         }
-        $(this).html(h);
     });
-}
-
-function variable_html( v, el ) {
-    if ( v !== '' ) {
-        if ( gd.begins( v, 'gd_track_' ) ) {
-            var x = v.split('gd_track_')[1];
-            let c = `<span id="gd-track-${x}">`;
-            c += '</span>';
-            return [c, 'append'];
-        }
-    }
-};
-
-function render_variables(container) {
-    gd.render_variable_spans( gd.eid + ' .info *' );
-    gd.update_variables( gd.eid + ' .info *' );
-
-    // const variables = gd.get_variables(container);
-    // variables.forEach((v) => {
-    //     const variable = v[0], el = v[1];
-    //     const result = variable_html( variable, el );
-    //     if ( result.length < 1 ) return;
-    //     const content = result[0], r = result[1];
-    //     if ( r === 'append' ) {
-    //         el.innerHTML += content;
-    //     }
-    // });
 }
 
 // events to be loaded only at startup
@@ -394,4 +370,41 @@ function register_events() {
         //We need to send dropped files to Server
         handle_file_upload(files);
     });
+}
+
+/**
+ * EQ class to handle creation and visual updates
+ * @param {string} flags initial flags to set
+ */
+class EQ {
+    
+    constructor( f = [] ) {
+        this.flags = f;
+    }
+
+    add(flag) {
+        flag.split(',').forEach((e) => {
+            if ( this.flags.indexOf(e) === -1 ) this.flags.push(e);
+        });
+        return this;
+    }
+
+    remove(flag) {
+        let f = this;
+        flag.split(',').forEach((e) => {
+            if ( e === 'changed' ) {
+                // iterate over this.flags and remove occurences of -changed
+                this.flags.forEach((val, i) => {
+                    if ( val.indexOf('-changed') !== -1 ) {
+                        this.flags.splice(i, 1);
+                    }
+                });
+            } else {
+                let i = this.flags.indexOf(e);
+                if ( i !== -1 ) this.flags.splice(i,1);
+            }
+        });
+        return this;
+    }
+
 }
