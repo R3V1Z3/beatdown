@@ -154,20 +154,16 @@ function update_band( freq, i ){
     // accentuate peaks by scaling based on nearness to height
     const scale = convertRange( f, [0, h], [0, 1] );
     f = f * scale;
-    
-    // set band height
-    $band.height(f);
 
     // set band width
     var width = $('.eq').width();
-    var spacing = parseInt( $band.css('margin-right') );
+    let spc = window.getComputedStyle(band).getPropertyValue("margin-right");
+    var spacing = parseInt( parseInt(spc) );
     var w = ( width / bands ) - spacing;
-    $band.width(w);
     
     // set band's left position
     const l = i * ( width / bands );
-    $band.css( 'left', l );
-    //band.setAttribute( 'style', `height:${f}; width:${w}; left:${l};` );
+    band.setAttribute( 'style', `height:${f}px; width:${w}px; left:${l}px;` );
 }
 
 function create_eq(bands) {
