@@ -1,6 +1,8 @@
 # BeatDown
 A music visualizer in HTML themed using CSS.
 
+- Drag volume slider or select a track to being play.
+
 Now playing: <!-- {$gd_track_title} -->
 
 - Go to: [Track Info](#track-info)

@@ -4,6 +4,8 @@ var track_data;
 var client_id = 'ea6d4c6a6f367767516c9221a30c2ced'; // soundcloud client_id
 var analyzer, audio, gain; // for configure_webaudio
 
+var context = new AudioContext();
+
 const gd = new GitDown('#wrapper', {
     title: 'BeatDown',
     content: 'README.md',
@@ -87,7 +89,6 @@ function find_video_references() {
 
 function configure_webaudio(bands) {
     // webaudio configuration
-    var context = new AudioContext();
     analyser = context.createAnalyser();
     analyser.maxDecibels = -25;
     analyser.minDecibels = -90;
@@ -251,6 +252,7 @@ function play(url){
         update_details(track_data);
         audio.src = track_data.stream_url + '?client_id=' + client_id;
         audio.play();
+        context.resume();
     }, function (error) {
         console.error( "Request failed.", error );
     });
@@ -328,6 +330,8 @@ function register_events() {
     $('.info .slider.volume input').on('input change', function(e) {
         var v = $(this).val();
         gain.gain.value = v;
+        context.resume();
+        audio.play();
     });
 
     // band change
