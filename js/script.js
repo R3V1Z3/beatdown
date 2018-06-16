@@ -44,7 +44,7 @@ function main() {
 }
 
 function configure_bands() {
-    bands = gd.settings['bands'];
+    bands = gd.settings.get_value('bands');
     const b = gd.get_param('bands');
     if ( b > 0 ) bands = b;
     if ( bands === undefined ) {
@@ -143,7 +143,7 @@ function update_band( freq, i ){
     // special consideration for the much used bass bands
     if ( i === 3 ) p -= 0.25;
     if ( i === 4 ) p -= 0.15;
-    if ( p > gd.settings.peak ) {
+    if ( p > gd.settings.get_value('peak') ) {
         const eid = document.getElementById( gd.eid.substr(1) );
         eid.classList.add(`peak-${i}`);
     }
@@ -335,9 +335,9 @@ function register_events() {
     });
 
     // band change
-    $('.info .field.choices.bands .choice').click((e) => {
-        var value = $(this).attr('data-value');
-        bands = gd.update_parameter('bands', value);
+    $('.info .slider.bands input').on('input change', function(e) {
+        var v = $(this).val();
+        bands = gd.update_parameter('bands', v);
         configure_bands();
     });
 
