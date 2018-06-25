@@ -27,7 +27,7 @@ Genre: <!-- {$gd_track_genre} -->
 <!-- {$gd_help_ribbon} -->
 #### Seer of Beats
 
-Tracks <!-- {$gd_selector_tracks} -->
+Tracks <!-- {$gd_datalist_tracks} -->
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
 - [Glitchers](https://soundcloud.com/ugotsta/glitchers)
 - [Soar](https://soundcloud.com/ugotsta/soar)
