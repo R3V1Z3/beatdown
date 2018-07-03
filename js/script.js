@@ -130,11 +130,6 @@ function convertRange( value, r1, r2 ) {
 
 function update_band( freq, i ){
     const band = document.querySelector('.eq .band-' + i);
-    var $band = $('.eq .band-' + i);
-    
-    // add data to band div in case user wants to utilize it
-    // $band.attr('data-range', freq);
-    // $band.attr('data-f', freq);
 
     // add css classes to main div when peaks are breached
     // eg: .peak-1
@@ -204,14 +199,15 @@ function random_int(min, max) {
 // configure soundcloud url
 function initialize_url() {
 
-    let tracks = gd.get_param('tracks');
-    if ( !tracks ) {
-        // play random track from list
-        let a = document.querySelectorAll(eid + ' .tracks-selector a.id');
-        if ( a !== null ) {
-            let random = random_int( 0, a.length - 1 );
-            tracks = a[random].getAttribute('data-id');
-        }
+    // get datalist options
+    var datalist = document.getElementById('tracks');
+    var options = datalist.getElementsByTagName('option');
+    let tracks = gd.settings.get_value('tracks');
+    let index = 1;
+    // get random track index if tracks is default
+    if ( tracks === 'Default' ) {
+        index = Math.floor( Math.random() * (options.length - 1) ) + 1;
+        tracks = options.item(index).value;
     }
 
     // base soundcloud url
@@ -315,16 +311,6 @@ function register_events_onstartup() {
 }
 
 function register_events() {
-
-    // SELECTOR KEYPRESS
-    $( eid + ' .info .tracks-input.selector-input' ).unbind().keyup((e) => {
-        if( e.which == 13 ) {
-            var id = $(this).val();
-            gd.set_param( 'tracks', id );
-            audio.currentTime = 0;
-            initialize_url();
-        }
-    });
 
     // volume change
     $('.info .slider.volume input').on('input change', function(e) {
