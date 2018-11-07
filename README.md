@@ -3,7 +3,7 @@ A music visualizer in HTML themed using CSS.
 
 - Drag volume slider or select a track to being play.
 
-Now playing: <!-- {$gd_track_title} -->
+Now playing: <!-- {$bd_track_title} -->
 
 - Go to: [Track Info](#track-info)
 - Ask: [Wait, what is this?](#what-is-this)
@@ -15,19 +15,21 @@ BeatDown is a music visualizer built with HTML. Wierd!
 HTML and CSS offer impressive visual power these days and while not as fast as native code, CSS facilitates customization by means that designers already know.
 
 ## Track Info
-<!-- {$gd_track_title} --> <!-- {$gd_track_user} -->
+<!-- {$bd_track_title} --> <!-- {$bd_track_user} -->
 
-<!-- {$gd_track_artwork_url} -->
+<!-- {$bd_track_artwork_url} -->
 
-<!-- {$gd_track_description} -->
+<!-- {$bd_track_description} -->
 
-Genre: <!-- {$gd_track_genre} -->
+Genre: <!-- {$bd_track_genre} -->
 
-# Tracks <!-- {$gd_info} -->
-<!-- {$gd_help_ribbon} -->
-#### Seer of Beats
+# BeatDown `🅑-nav`
 
-Tracks <!-- {$gd_datalist_tracks} -->
+Seer of Beats
+
+`ⓘ The code below designates a list of content sources the user will be able to select from in the app.`
+
+tracks `🅑-datalist`
 - [Nothing](https://soundcloud.com/ugotsta/nothing)
 - [Glitchers](https://soundcloud.com/ugotsta/glitchers)
 - [Soar](https://soundcloud.com/ugotsta/soar)
@@ -42,32 +44,66 @@ Tracks <!-- {$gd_datalist_tracks} -->
 - [Ultimate 6 - Choose your Destiny](https://soundcloud.com/ugotsta/ultima-6-choose-your-destiny)
 - [Chronotrigger - Gato's Dub](https://soundcloud.com/ugotsta/chronotrigger-gatos-dub?in=ugotsta/sets/remixes)
 
-<!-- {$gd_slider_volume="1,0,1,0.01"} -->
+volume `🅑-slider="1,0,1,0.01"`
 
-<!-- {$gd_collapsible_appearance} -->
+## Appearance `🅑-collapsible`
 
-Themes <!-- {$gd_css} -->
+css `🅑-datalist`
 - [Monsterrat](https://gist.github.com/Ugotsta/1e46bee3b3340ba0f96f2a14ff373780)
 - [Glitchers](https://gist.github.com/Ugotsta/2dca639c6647a709846ddbabeeb98e62)
-- [Glitchers](https://gist.github.com/Ugotsta/2dca639c6647a709846ddbabeeb98e62)
 
-<!-- {$gd_slider_fontsize="100,50,600,1,%"} -->
+bands `🅑-slider="64,8,128,1"`
+peak `🅑-slider="0.7,0,1,0.01"`
 
-<!-- {$gd_slider_bands="64,8,128,1"} -->
+`🅑-theme-variables`
 
-<!-- {$gd_slider_peak="0.7,0,1,0.01"} -->
+## Effects `🅑-collapsible`
 
-<!-- {$gd_theme_variables} -->
+vignette-blend `🅑-select`
 
-<!-- {$gd_collapsible_end_appearance} -->
+vignette `🅑-slider="0.25,0,1,0.025"`
 
-<!-- {$gd_collapsible_slides} -->
+svg-filter `🅑-select`
+- *None
 
-Layouts <!-- {$gd_gist} -->
-- [Just the Info](https://gist.github.com/Ugotsta/d640574f8008ec90c75443843464d0e6)
+---
 
-<!-- {$gd_toc=} -->
+brightness `🅑-slider="1,0,3,0.05"`
+contrast `🅑-slider="100%,0,300,1,%"`
+grayscale `🅑-slider="0%,0,100,1,%"`
+hue-rotate `🅑-slider="0deg,0,360,1,deg"`
+invert `🅑-slider="0%,0,100,1,%"`
+saturate `🅑-slider="100%,0,300,1,%"`
+sepia `🅑-slider="0%,0,100,1,%"`
+blur `🅑-slider="0px,0,20,1,px"`
 
-<!-- {$gd_collapsible_end_slides} -->
+## Perspective `🅑-collapsible`
 
-<!-- {$gd_hide} -->
+scale `🅑-slider="0,1,5,0.1"`
+perspective `🅑-slider="1500px,0,2000,1,px"`
+originx `🅑-slider="50%,0,100,1,%"`
+originy `🅑-slider="50%,0,100,1,%"`
+rotatex `🅑-slider="0deg,0,360,1,deg"`
+rotatey `🅑-slider="0deg,0,360,1,deg"`
+scalez `🅑-slider="0,1,5,0.1"`
+rotatez `🅑-slider="0deg,0,360,1,deg"`
+translatez `🅑-slider="0px,-500,500,1,px"`
+
+## Dimensions `🅑-collapsible`
+
+width `🅑-slider="960px,4,4000,1,px"`
+height `🅑-slider="400px,4,2000,1,px"`
+padding `🅑-slider="10px,0,500,1,px"`
+inner-space `🅑-slider="100px,0,300,1,px"`
+outer-space `🅑-slider="0px,0,300,1,px"`
+offsetx `🅑-slider="0px,-4000,4000,1,px"`
+offsety `🅑-slider="0px,-4000,4000,1,px"`
+
+## Contents `🅑-collapsible`
+
+`🅑-toc`
+
+## Help `🅑-group`
+
+`🅑-help`
+`🅑-hide`
