@@ -29,6 +29,53 @@ class BeatDown extends BreakDown {
         this.registerAppEvents();
         this.updateSliderValue( 'outer-space', this.settings.getValue('outer-space') );
         this.centerView();
+
+        if (this.status.has('tracks-changed')) {
+            audio.currentTime = 0;
+            this.initialize_url();
+            return;
+        }
+
+        if ( !this.status.has('callback') ) {
+            this.configure_bands();
+            this.configure_webaudio(bands);
+            gain.gain.value = this.settings.get_value('volume');
+
+            // create eq container
+            //this.create_eq(bands);
+            //this.initialize_url();
+            //this.loop();
+        }
+
+        // this.find_video_references();
+    }
+
+    configure_bands() {
+        bands = this.settings.get_value('bands');
+        const b = this.get_param('bands');
+        if ( b > 0 ) bands = b;
+        if ( bands === undefined ) {
+            bands = 64;
+        }
+        if ( bands < 4 ) bands = 4;
+
+        // remove bands then create new ones
+        //$('.band').remove();
+        let b = document.querySelectorAll('.band');
+        //b.forEach();
+        if ( b !== null ) b.parentNode.removeChild(b);
+        // $('.eq .eq-inner');
+        let eq_inner = document.querySelector('.eq .eq-inner');
+        if ( eq_inner !== null ) eq_inner.innerHTML += this.band_html(bands);
+    }
+
+    band_html(bands) {
+        var x = 0;
+        var html = '';
+        for ( var i = 0; i < bands; i++ ) {
+            html += `<div class="band band-${i}"></div>`;
+        }
+        return html;
     }
 
     extractSvg(filename) {
@@ -607,41 +654,4 @@ class BeatDown extends BreakDown {
 //         //We need to send dropped files to Server
 //         handle_file_upload(files);
 //     });
-// }
-//
-// /**
-//  * EQ class to handle creation and visual updates
-//  * @param {string} flags initial flags to set
-//  */
-// class EQ {
-//
-//     constructor( f = [] ) {
-//         this.flags = f;
-//     }
-//
-//     add(flag) {
-//         flag.split(',').forEach((e) => {
-//             if ( this.flags.indexOf(e) === -1 ) this.flags.push(e);
-//         });
-//         return this;
-//     }
-//
-//     remove(flag) {
-//         let f = this;
-//         flag.split(',').forEach((e) => {
-//             if ( e === 'changed' ) {
-//                 // iterate over this.flags and remove occurences of -changed
-//                 this.flags.forEach((val, i) => {
-//                     if ( val.indexOf('-changed') !== -1 ) {
-//                         this.flags.splice(i, 1);
-//                     }
-//                 });
-//             } else {
-//                 let i = this.flags.indexOf(e);
-//                 if ( i !== -1 ) this.flags.splice(i,1);
-//             }
-//         });
-//         return this;
-//     }
-//
 // }
