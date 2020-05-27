@@ -2,7 +2,7 @@ var bands;
 var track_data;
 
 var client_id = 'ea6d4c6a6f367767516c9221a30c2ced'; // soundcloud client_id
-var analyzer, audio, gain; // for configure_webaudio
+var analyser, audio, gain; // for configureWebaudio
 
 var context = new AudioContext();
 
@@ -32,27 +32,108 @@ class BeatDown extends BreakDown {
 
         if (this.status.has('tracks-changed')) {
             audio.currentTime = 0;
-            this.initialize_url();
+            this.initializeUrl();
             return;
         }
 
         if ( !this.status.has('callback') ) {
-            this.configure_bands();
-            this.configure_webaudio(bands);
-            gain.gain.value = this.settings.get_value('volume');
+            this.configureBands();
+            this.configureWebaudio(bands);
+            gain.gain.value = this.settings.getValue('volume');
 
             // create eq container
-            //this.create_eq(bands);
-            //this.initialize_url();
+            this.createEQ(bands);
+            //this.initializeUrl();
             //this.loop();
         }
 
         // this.find_video_references();
     }
 
-    configure_bands() {
-        bands = this.settings.get_value('bands');
-        const b = this.get_param('bands');
+    // loop(){
+    //     window.requestAnimationFrame(this.loop() );
+    //     var freq = new Uint8Array(bands);
+    //     analyser.getByteFrequencyData(freq);
+    //
+    //     // remove .peak classes then update bands
+    //     // $(eid).removeClass(function (index, className) {
+    //     //     return (className.match (/(^|\s)peak-\S+/g) || []).join(' ');
+    //     // });
+    //     freq.forEach( (f, i) => this.updateBand(f, i) );
+    // }
+
+    convertRange( value, r1, r2 ) {
+        return ( value - r1[0] ) * ( r2[1] - r2[0] ) / ( r1[1] - r1[0] ) + r2[0];
+    }
+
+    updateBand( freq, i ){
+        const band = document.querySelector('.eq .band-' + i);
+
+        // add css classes to main div when peaks are breached
+        // eg: .peak-1
+        let p = this.convertRange( freq, [0, 256], [0, 1] );
+
+        // special consideration for the much used bass bands
+        if ( i === 3 ) p -= 0.25;
+        if ( i === 4 ) p -= 0.15;
+        if ( p > bd.settings.getValue('peak') ) {
+            const eid = document.getElementById( bd.eid.substr(1) );
+            eid.classList.add(`peak-${i}`);
+        }
+
+        // freq maxes at 256, scale freq to fit eq height
+        let eq = document.querySelector('.eq');
+        let h = eq.offsetHeight;
+        //var h = $('.eq').height();
+        let f = convertRange( freq, [0, 256], [0, h] );
+
+        // accentuate peaks by scaling based on nearness to height
+        const scale = convertRange( f, [0, h], [0, 1] );
+        f = f * scale;
+
+        // set band width
+        //var width = $('.eq').width();
+        let width = eq.offsetWidth;
+        let spc = window.getComputedStyle(band).getPropertyValue("margin-right");
+        var spacing = parseInt( parseInt(spc) );
+        var w = ( width / bands ) - spacing;
+
+        // set band's left position
+        const l = i * ( width / bands );
+        band.setAttribute( 'style', `height:${f}px; width:${w}px; left:${l}px;` );
+    }
+
+    createEQ(bands) {
+        // ensure any existing .eq is removed first
+        //$('.eq').remove();
+        let eq = document.querySelector('.eq');
+        if ( eq > 0 ) eq.parentNode.removeChild(eq);
+
+        let spacing = 10; // set default just for initial rendering
+        let inner = document.querySelector('.inner');
+        inner.insertAdjacentHTML('beforeend', '<div class="eq"></div>');
+
+        //$('.inner').append('<div class="eq"></div>');
+        eq = document.querySelector('.eq');
+        //var $eq = $('.eq');
+        // let width = $eq.width();
+        // let height = $eq.height();
+        let width = eq.offsetWidth;
+        let height = eq.offsetHeight;
+
+        let band_width = ( width / bands ) - spacing;
+        let band_height = 0;
+
+        let html = '<div class="eq-inner">';
+        html += this.bandHtml(bands);
+        html += '</div>';
+        //$eq.append(html
+        eq.insertAdjacentHTML('beforeend', html);
+    }
+
+    configureBands() {
+        bands = this.settings.getValue('bands');
+        const b = this.settings.getValue('bands');
         if ( b > 0 ) bands = b;
         if ( bands === undefined ) {
             bands = 64;
@@ -60,22 +141,81 @@ class BeatDown extends BreakDown {
         if ( bands < 4 ) bands = 4;
 
         // remove bands then create new ones
-        //$('.band').remove();
-        let b = document.querySelectorAll('.band');
+        let el = document.querySelectorAll('.band');
         //b.forEach();
-        if ( b !== null ) b.parentNode.removeChild(b);
+        if ( el > 0 ) el.parentNode.removeChild(el);
         // $('.eq .eq-inner');
         let eq_inner = document.querySelector('.eq .eq-inner');
-        if ( eq_inner !== null ) eq_inner.innerHTML += this.band_html(bands);
+        if ( eq_inner !== null ) eq_inner.innerHTML += this.bandHtml(bands);
     }
 
-    band_html(bands) {
+    configureWebaudio(bands) {
+        // webaudio configuration
+        analyser = context.createAnalyser();
+        analyser.maxDecibels = -25;
+        analyser.minDecibels = -90;
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.8;
+
+        var filter = context.createBiquadFilter();
+        filter.type = "highpass";
+        filter.frequency.value = 50;
+        filter.Q.value = 1;
+
+        gain = context.createGain();
+
+        audio = new Audio();
+        audio.crossOrigin = 'anonymous';
+
+        var source = context.createMediaElementSource(audio);
+        source.connect(gain);
+        gain.connect(filter);
+        filter.connect(analyser);
+        gain.connect(context.destination);
+    }
+
+    bandHtml(bands) {
         var x = 0;
         var html = '';
         for ( var i = 0; i < bands; i++ ) {
             html += `<div class="band band-${i}"></div>`;
         }
         return html;
+    }
+
+    // configure soundcloud url
+    initializeUrl() {
+
+        // get datalist options
+        var datalist = document.getElementById('tracks');
+        var options = datalist.getElementsByTagName('option');
+        let tracks = bd.settings.getValue('tracks');
+        let index = 1;
+        // get random track index if tracks is default
+        if ( tracks === 'Default' ) {
+            index = Math.floor( Math.random() * (options.length - 1) ) + 1;
+            tracks = options.item(index).value;
+        }
+
+        // base soundcloud url
+        var url = '//api.soundcloud.com/tracks/?';
+
+        // add client id
+        url += `client_id=${client_id}`;
+
+        // check if user provided a track number
+        var isnum = /^\d+$/.test(tracks);
+        if ( isnum ) {
+            url += `&ids=${tracks}&`;
+            play(url);
+        } else if ( tracks.indexOf('soundcloud.com') > -1 ) {
+            // soundcloud url specified so resolve it first
+            sc_resolve( tracks, url );
+        } else {
+            // handle request as a query
+            url += `&q=${tracks}`;
+            play(url);
+        }
     }
 
     extractSvg(filename) {
@@ -246,61 +386,61 @@ class BeatDown extends BreakDown {
         }, this);
 
         // mousewheel zoom handler
-        this.events.add('.inner', 'wheel', e => {
-            // disallow zoom within parchment content so user can safely scroll text
-            let translatez = document.querySelector('.nav .slider.translatez input');
-            if ( translatez === null ) return;
-            var v = Number( translatez.value );
-            if( e.deltaY < 0 ) {
-                v += 10;
-                if ( v > 500 ) v = 500;
-            } else{
-                v -= 10;
-                if ( v < -500 ) v = -500;
-            }
-            this.settings.setValue('translatez', v);
-            this.updateSliderValue( 'translatez', v );
-        }, this );
-
-        interact(this.eidInner)
-        .gesturable({
-            onmove: function (event) {
-                var scale = this.settings.getValue('translatez');
-                scale = scale * (5 + event.ds);
-                this.updateSliderValue( 'translatez', scale );
-                this.dragMoveListener(event);
-            }
-        })
-        .draggable({ onmove: this.dragMoveListener.bind(this) });
+        // this.events.add('.inner', 'wheel', e => {
+        //     // disallow zoom within parchment content so user can safely scroll text
+        //     let translatez = document.querySelector('.nav .slider.translatez input');
+        //     if ( translatez === null ) return;
+        //     var v = Number( translatez.value );
+        //     if( e.deltaY < 0 ) {
+        //         v += 10;
+        //         if ( v > 500 ) v = 500;
+        //     } else{
+        //         v -= 10;
+        //         if ( v < -500 ) v = -500;
+        //     }
+        //     this.settings.setValue('translatez', v);
+        //     this.updateSliderValue( 'translatez', v );
+        // }, this );
+        //
+        // interact(this.eidInner)
+        // .gesturable({
+        //     onmove: function (event) {
+        //         var scale = this.settings.getValue('translatez');
+        //         scale = scale * (5 + event.ds);
+        //         this.updateSliderValue( 'translatez', scale );
+        //         this.dragMoveListener(event);
+        //     }
+        // })
+        // .draggable({ onmove: this.dragMoveListener.bind(this) });
 
     }
 
-    dragMoveListener (event) {
-        let target = event.target;
-        if ( !target.classList.contains('inner') ) return;
-        if ( event.buttons > 1 && event.buttons < 4 ) return;
-        let x = (parseFloat(target.getAttribute('data-x')) || 0);
-        let oldX = x;
-        x += event.dx;
-        let y = (parseFloat(target.getAttribute('data-y')) || 0);
-        let oldY = y;
-        y += event.dy;
-
-        // when middle mouse clicked and no movement, reset offset positions
-        if ( event.buttons === 4 ) {
-            x = this.settings.getDefault('offsetx');
-            y = this.settings.getDefault('offsety');
-        }
-
-        this.updateSliderValue( 'offsetx', x );
-        this.updateSliderValue( 'offsety', y );
-
-        // update the position attributes
-        target.setAttribute('data-x', x);
-        target.setAttribute('data-y', y);
-
-        this.centerView();
-    }
+    // dragMoveListener (event) {
+    //     let target = event.target;
+    //     if ( !target.classList.contains('inner') ) return;
+    //     if ( event.buttons > 1 && event.buttons < 4 ) return;
+    //     let x = (parseFloat(target.getAttribute('data-x')) || 0);
+    //     let oldX = x;
+    //     x += event.dx;
+    //     let y = (parseFloat(target.getAttribute('data-y')) || 0);
+    //     let oldY = y;
+    //     y += event.dy;
+    //
+    //     // when middle mouse clicked and no movement, reset offset positions
+    //     if ( event.buttons === 4 ) {
+    //         x = this.settings.getDefault('offsetx');
+    //         y = this.settings.getDefault('offsety');
+    //     }
+    //
+    //     this.updateSliderValue( 'offsetx', x );
+    //     this.updateSliderValue( 'offsety', y );
+    //
+    //     // update the position attributes
+    //     target.setAttribute('data-x', x);
+    //     target.setAttribute('data-y', y);
+    //
+    //     this.centerView();
+    // }
 
 }
 
@@ -317,32 +457,32 @@ class BeatDown extends BreakDown {
 //
 //     if (bd.status.has('tracks-changed')) {
 //         audio.currentTime = 0;
-//         initialize_url();
+//         initializeUrl();
 //         return;
 //     }
 //
 //     if ( !bd.status.has('callback') ) {
-//         configure_bands();
-//         configure_webaudio(bands);
+//         configureBands();
+//         configureWebaudio(bands);
 //
 //         // set initial volume based on slider
 //         var v = $('.info .slider.volume input').val();
 //         gain.gain.value = v;
 //
 //         // create eq container
-//         create_eq(bands);
+//         createEQ(bands);
 //
 //         register_events();
 //         register_events_onstartup();
-//         initialize_url();
+//         initializeUrl();
 //         loop();
 //     }
 //
 //     find_video_references();
 // }
 //
-// function configure_bands() {
-//     bands = bd.settings.get_value('bands');
+// function configureBands() {
+//     bands = bd.settings.getValue('bands');
 //     const b = bd.get_param('bands');
 //     if ( b > 0 ) bands = b;
 //     if ( bands === undefined ) {
@@ -353,7 +493,7 @@ class BeatDown extends BreakDown {
 //     // remove bands then create new ones
 //     $('.band').remove();
 //     var $eq_inner = $('.eq .eq-inner');
-//     $eq_inner.append( band_html(bands) );
+//     $eq_inner.append( bandHtml(bands) );
 // }
 //
 // function find_video_references() {
@@ -385,30 +525,7 @@ class BeatDown extends BreakDown {
 //     });
 // }
 //
-// function configure_webaudio(bands) {
-//     // webaudio configuration
-//     analyser = context.createAnalyser();
-//     analyser.maxDecibels = -25;
-//     analyser.minDecibels = -90;
-//     analyser.fftSize = 2048;
-//     analyser.smoothingTimeConstant = 0.8;
-//
-//     var filter = context.createBiquadFilter();
-//     filter.type = "highpass";
-//     filter.frequency.value = 50;
-//     filter.Q.value = 1;
-//
-//     gain = context.createGain();
-//
-//     audio = new Audio();
-//     audio.crossOrigin = 'anonymous';
-//
-//     var source = context.createMediaElementSource(audio);
-//     source.connect(gain);
-//     gain.connect(filter);
-//     filter.connect(analyser);
-//     gain.connect(context.destination);
-// }
+
 //
 // function loop(){
 //     window.requestAnimationFrame(loop);
@@ -419,14 +536,14 @@ class BeatDown extends BreakDown {
 //     $(eid).removeClass(function (index, className) {
 //         return (className.match (/(^|\s)peak-\S+/g) || []).join(' ');
 //     });
-//     freq.forEach( (f, i) => update_band(f, i) );
+//     freq.forEach( (f, i) => updateBand(f, i) );
 // }
 //
 // function convertRange( value, r1, r2 ) {
 //     return ( value - r1[0] ) * ( r2[1] - r2[0] ) / ( r1[1] - r1[0] ) + r2[0];
 // }
 //
-// function update_band( freq, i ){
+// function updateBand( freq, i ){
 //     const band = document.querySelector('.eq .band-' + i);
 //
 //     // add css classes to main div when peaks are breached
@@ -436,7 +553,7 @@ class BeatDown extends BreakDown {
 //     // special consideration for the much used bass bands
 //     if ( i === 3 ) p -= 0.25;
 //     if ( i === 4 ) p -= 0.15;
-//     if ( p > bd.settings.get_value('peak') ) {
+//     if ( p > bd.settings.getValue('peak') ) {
 //         const eid = document.getElementById( bd.eid.substr(1) );
 //         eid.classList.add(`peak-${i}`);
 //     }
@@ -460,7 +577,7 @@ class BeatDown extends BreakDown {
 //     band.setAttribute( 'style', `height:${f}px; width:${w}px; left:${l}px;` );
 // }
 //
-// function create_eq(bands) {
+// function createEQ(bands) {
 //     // ensure any existing .eq is removed first
 //     $('.eq').remove();
 //     var spacing = 10; // set default just for initial rendering
@@ -473,13 +590,13 @@ class BeatDown extends BreakDown {
 //     var band_height = 0;
 //
 //     var html = '<div class="eq-inner">';
-//     html += band_html(bands);
+//     html += bandHtml(bands);
 //     html += '</div>';
 //     $eq.append(html);
 //     return $eq;
 // }
 //
-// function band_html(bands) {
+// function bandHtml(bands) {
 //     var x = 0;
 //     var html = '';
 //     for ( var i = 0; i < bands; i++ ) {
@@ -494,40 +611,7 @@ class BeatDown extends BreakDown {
 //     return Math.floor(Math.random() * (max - min)) + min;
 // }
 //
-// // configure soundcloud url
-// function initialize_url() {
-//
-//     // get datalist options
-//     var datalist = document.getElementById('tracks');
-//     var options = datalist.getElementsByTagName('option');
-//     let tracks = bd.settings.get_value('tracks');
-//     let index = 1;
-//     // get random track index if tracks is default
-//     if ( tracks === 'Default' ) {
-//         index = Math.floor( Math.random() * (options.length - 1) ) + 1;
-//         tracks = options.item(index).value;
-//     }
-//
-//     // base soundcloud url
-//     var url = '//api.soundcloud.com/tracks/?';
-//
-//     // add client id
-//     url += `client_id=${client_id}`;
-//
-//     // check if user provided a track number
-//     var isnum = /^\d+$/.test(tracks);
-//     if ( isnum ) {
-//         url += `&ids=${tracks}&`;
-//         play(url);
-//     } else if ( tracks.indexOf('soundcloud.com') > -1 ) {
-//         // soundcloud url specified so resolve it first
-//         sc_resolve( tracks, url );
-//     } else {
-//         // handle request as a query
-//         url += `&q=${tracks}`;
-//         play(url);
-//     }
-// }
+
 //
 // function sc_resolve( t, url ) {
 //     var resolve_url = `//api.soundcloud.com/resolve.json?url=${t}&client_id=${client_id}`;
@@ -622,13 +706,13 @@ class BeatDown extends BreakDown {
 //     $('.info .slider.bands input').on('input change', function(e) {
 //         var v = $(this).val();
 //         bands = bd.update_parameter('bands', v);
-//         configure_bands();
+//         configureBands();
 //     });
 //
 //     // play next song when track finishes
 //     audio.addEventListener("ended", (e) =>{
 //         audio.currentTime = 0;
-//         initialize_url();
+//         initializeUrl();
 //     });
 //
 //     // drag-and-drop file handler for local files
